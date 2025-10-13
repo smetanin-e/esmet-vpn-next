@@ -27,7 +27,7 @@ export const LoginForm: React.FC<Props> = () => {
   };
   return (
     <FormProvider {...form}>
-      <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
+      <form className='space-y-8' onSubmit={form.handleSubmit(onSubmit)}>
         <div className='space-y-2'>
           <FormInput
             label='Логин'

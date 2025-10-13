@@ -13,7 +13,7 @@ export const CleareButton: React.FC<Props> = ({ onClick, className }) => {
       type='button'
       onClick={onClick}
       className={cn(
-        'absolute right-4 top-1/2 -translate-y-1/2 opacity-30 hover:opacity-100 cursor-pointer',
+        'text-gray-500 absolute right-4 top-1/2 -translate-y-1/2 opacity-40 hover:opacity-100 cursor-pointer',
         className,
       )}
     >

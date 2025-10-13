@@ -3,6 +3,7 @@ import React from 'react';
 import { useFormContext } from 'react-hook-form';
 import { CleareButton, ErrorText, RequiredSymbol } from '@/shared/components';
 import { Input } from '@/shared/components/ui';
+import { cn } from '@/shared/lib/utils';
 
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   name: string;
@@ -34,7 +35,7 @@ export const FormInput: React.FC<Props> = ({
     setValue(name, name === 'phone' ? '+7' : '', { shouldValidate: true });
   };
   return (
-    <div className={className}>
+    <div className={cn(className, 'relative')}>
       {label && (
         <p className='font-medium mb-1 text-sm'>
           {label} {required && <RequiredSymbol />}
