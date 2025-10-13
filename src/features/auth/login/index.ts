@@ -1,1 +1,4 @@
 export { loginFeature } from './model/login';
+
+export { LoginForm } from './ui/login-form';
+export { LoginModal } from './ui/login-modal';

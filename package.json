@@ -11,7 +11,11 @@
     "migrate": "npx prisma migrate dev",
     "prisma:seed": "prisma db seed"
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.17.1",
     "@prisma/extension-accelerate": "^2.0.2",
     "@radix-ui/react-dialog": "^1.1.15",
@@ -19,6 +23,7 @@
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-switch": "^1.2.6",
+    "axios": "^1.12.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "jsonwebtoken": "^9.0.2",
@@ -26,6 +31,7 @@
     "next": "15.5.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-hook-form": "^7.65.0",
     "tailwind-merge": "^3.3.1",
     "zod": "^4.1.12"
   },

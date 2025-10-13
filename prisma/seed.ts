@@ -1,4 +1,4 @@
-//import { generateSalt, hashPassword } from '@/shared/lib/auth/passwordHasher';
+import { generateSalt, hashPassword } from '@/shared/lib/auth';
 import { PrismaClient, UserRole } from '@prisma/client';
 
 const prisma = new PrismaClient();

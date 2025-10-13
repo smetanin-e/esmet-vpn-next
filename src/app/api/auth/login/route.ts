@@ -27,6 +27,6 @@ export async function POST(req: NextRequest) {
     }
     console.error('[API_AUTH_LOGIN]Ошибка входа в аккаунт', error);
     const message = error instanceof Error ? error.message : 'Ошибка входа в аккаунт';
-    NextResponse.json({ error: message }, { status: 401 });
+    return NextResponse.json({ error: message }, { status: 401 });
   }
 }

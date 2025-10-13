@@ -1,5 +1,4 @@
-import { Button } from '@/shared/components/ui';
-import { LogIn } from 'lucide-react';
+import { LoginModal } from '@/features/auth/login';
 import Link from 'next/link';
 
 export default function Home() {
@@ -14,12 +13,7 @@ export default function Home() {
         систему, чтобы управлять своими настройками и конфигурациями WireGuard.
       </p>
 
-      <Link href={'/vpn'}>
-        <Button>
-          <LogIn className='w-4 h-4' />
-          Перейти
-        </Button>
-      </Link>
+      <LoginModal />
 
       <footer className='mt-20 text-gray-400 text-sm'>
         &copy; 2025 esmetVPN. Все права защищены.
