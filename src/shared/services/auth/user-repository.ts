@@ -24,4 +24,25 @@ export const userRepository = {
       },
     });
   },
+
+  async findAuthUserById(userId: number) {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        login: true,
+        role: true,
+        firstName: true,
+        lastName: true,
+        balance: true,
+        subsEnd: true,
+        subscription: {
+          select: { name: true, dailyPrice: true, maxPeers: true, description: true },
+        },
+      },
+    });
+
+    if (!user) return null;
+    return user;
+  },
 };

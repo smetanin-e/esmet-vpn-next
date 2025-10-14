@@ -7,7 +7,13 @@ import { sessionRepository } from './session-repository';
 import { TokenService } from './token-service';
 import { REFRESH_TOKEN_EXPIRATION_SECONDS } from '@/shared/config';
 import { UserRole } from '@prisma/client';
+import { AuthUser } from '@/shared/types/auth-user.type';
 
+type RefreshTokensResult = {
+  user: AuthUser;
+  accessToken: string;
+  refreshToken: string;
+};
 //======================================================================================
 //Регистрация пользователя
 export async function registerUser(data: RegisterUserType) {
@@ -84,8 +90,8 @@ export async function logoutUser(userId: number) {
 
 //======================================================================================
 //refresh токенов
-export async function refreshTokens(refreshToken: string) {
-  const session = await sessionRepository.deleteByRefreshToken(refreshToken);
+export async function refreshTokens(refreshToken: string): Promise<RefreshTokensResult> {
+  const session = await sessionRepository.findByRefreshToken(refreshToken);
   if (!session) throw new Error('Неверный refresh токен');
 
   // Проверяем, не истёк ли refresh-токен
@@ -94,7 +100,7 @@ export async function refreshTokens(refreshToken: string) {
     throw new Error('Срок действия refresh токена истёк');
   }
 
-  const user = await userRepository.findById(session.userId);
+  const user = await userRepository.findAuthUserById(session.userId);
   if (!user) throw new Error('Пользователь не найден');
 
   //генерируем новые токены
@@ -109,10 +115,8 @@ export async function refreshTokens(refreshToken: string) {
   await sessionRepository.deleteByRefreshToken(refreshToken);
   await sessionRepository.create(user.id, newRefreshToken, expiresAt);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { password: _, salt: __, ...safeUser } = user;
   return {
-    user: safeUser,
+    user,
     accessToken: newAccessToken,
     refreshToken: newRefreshToken,
   };

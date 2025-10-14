@@ -1,4 +1,4 @@
-import { refreshFeature } from '@/features/auth/refresh';
+import { refreshFeatureServer } from '@/features/auth/refresh';
 import {
   ACCESS_TOKEN_EXPIRATION_SECONDS,
   REFRESH_TOKEN_COOKIE,
@@ -13,8 +13,12 @@ export async function POST(req: NextRequest) {
     if (!refreshToken) {
       return NextResponse.json({ error: 'refresh токен отсутствует' }, { status: 401 });
     }
-
-    const { user, accessToken, refreshToken: newRefreshToken } = await refreshFeature(refreshToken);
+    console.log('[REFRESH COOKIES]', req.cookies.getAll());
+    const {
+      user,
+      accessToken,
+      refreshToken: newRefreshToken,
+    } = await refreshFeatureServer(refreshToken);
 
     const response = NextResponse.json({
       user,

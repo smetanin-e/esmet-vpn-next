@@ -4,6 +4,7 @@ import { UserRole } from '@prisma/client';
 
 import prisma from '@/shared/lib/prisma';
 import { JWT_SECRET } from '@/shared/config';
+import { AuthUser } from '@/shared/types/auth-user.type';
 
 type JwtPayload = {
   userId: number;
@@ -40,7 +41,7 @@ export class TokenService {
   }
 
   // Получение пользователя из access token
-  static async getUserFromAccessToken(token: string) {
+  static async getUserFromAccessToken(token: string): Promise<AuthUser | null> {
     try {
       const payload = this.verifyAccessToken(token);
       if (!payload) return null;
@@ -48,14 +49,21 @@ export class TokenService {
         where: {
           id: payload.userId,
         },
+        select: {
+          id: true,
+          login: true,
+          role: true,
+          firstName: true,
+          lastName: true,
+          balance: true,
+          subsEnd: true,
+          subscription: {
+            select: { name: true, dailyPrice: true, maxPeers: true, description: true },
+          },
+        },
       });
 
-      if (!user) {
-        return null;
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password: _, salt: __, ...safeUser } = user;
-      return safeUser;
+      return user ?? null;
     } catch (error) {
       console.error('[TokenService.getUserFromAccessToken]', error);
       return null;

@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
-import { CleareButton, ErrorText, RequiredSymbol } from '@/shared/components';
+import { CleareButton, ErrorText, RequiredSymbol, ShowPasswordIcon } from '@/shared/components';
 import { Input } from '@/shared/components/ui';
 import { cn } from '@/shared/lib/utils';
 
@@ -21,6 +21,7 @@ export const FormInput: React.FC<Props> = ({
   children,
   ...props
 }) => {
+  const [showPassword, setShowPassword] = React.useState(false);
   const {
     register,
     formState: { errors },
@@ -45,8 +46,18 @@ export const FormInput: React.FC<Props> = ({
       <div className='relative'>
         {children}
 
-        <Input {...props} {...register(name)} className={children?.valueOf && 'pl-9'} />
-        {value && <CleareButton onClick={onClickCleare} />}
+        <Input
+          {...props}
+          type={props.type === 'password' ? (showPassword ? 'text' : 'password') : props.type}
+          {...register(name)}
+          className={children?.valueOf && 'pl-9'}
+        />
+        {value &&
+          (props.type !== 'password' ? (
+            <CleareButton onClick={onClickCleare} />
+          ) : (
+            <ShowPasswordIcon showPassword={showPassword} setShowPassword={setShowPassword} />
+          ))}
       </div>
 
       {errorText && <ErrorText className='' text={errorText} />}
