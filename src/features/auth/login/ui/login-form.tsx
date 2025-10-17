@@ -1,10 +1,11 @@
 'use client';
-import { LoginFormType, loginSchema } from '@/shared/schemas/login-schema';
+
 import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shared/components/ui';
 import { FormInput } from '@/shared/components/form';
-import { signIn } from '@/shared/services/auth/auth-clients';
+import { LoginFormType, loginSchema } from '@/shared/schemas/login-schema';
+
 interface Props {
   className?: string;
 }
@@ -18,8 +19,8 @@ export const LoginForm: React.FC<Props> = () => {
     },
   });
   const onSubmit = async (data: LoginFormType) => {
-    await signIn(data);
     try {
+      console.log(data);
     } catch (error) {
       console.log('Error [LOGIN_FORM]', error);
     }

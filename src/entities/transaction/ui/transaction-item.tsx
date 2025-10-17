@@ -1,9 +1,10 @@
+import { TransactionType } from '@prisma/client';
 import React from 'react';
 
 interface Props {
   className?: string;
   icon: React.ReactNode;
-  type?: any; //TODO ДОБАВИТЬ ТИП ТРАНЗАКЦИИ ИЗ PRISMA (пополнение/списание)
+  type?: TransactionType;
 }
 
 export const TransactionItem: React.FC<Props> = ({ icon, type }) => {

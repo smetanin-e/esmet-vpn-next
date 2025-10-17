@@ -1,13 +1,6 @@
-import { LoginModal } from '@/features/auth/login';
-import { refreshFeatureClient } from '@/features/auth/refresh';
-
-import { getMe } from '@/shared/lib/auth';
-import Link from 'next/link';
+import { LoginModal } from '@/features/auth/login/ui/login-modal';
 
 export default async function Home() {
-  const authUser = await getMe();
-  console.log(authUser);
-
   return (
     <div className='flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900'>
       <h1 className='text-4xl md:text-5xl font-bold mb-4 text-center'>
