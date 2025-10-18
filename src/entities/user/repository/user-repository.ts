@@ -48,4 +48,22 @@ export const userRepository = {
       },
     });
   },
+
+  async findUserWithRelations(userId: number) {
+    return prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        subscription: true,
+        transactions: true,
+        peers: true,
+      },
+    });
+  },
+
+  async updateUserById(userId: number, data: object) {
+    return prisma.user.update({
+      where: { id: userId },
+      data,
+    });
+  },
 };

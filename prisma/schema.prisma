@@ -32,23 +32,12 @@ model User {
     updatedAt DateTime @updatedAt
 
     //Связи
-    sessions     Session[]
+
     peers        WireguardPeer[]
     transactions Transaction[]
 
     subscriptionId Int?          @unique
     subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
-}
-
-model Session {
-    id           String @id @default(uuid())
-    refreshToken String @unique
-
-    userId Int
-    user   User @relation(fields: [userId], references: [id])
-
-    createdAt DateTime @default(now())
-    expiresAt DateTime
 }
 
 model WireguardPeer {

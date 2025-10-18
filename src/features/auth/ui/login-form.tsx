@@ -3,10 +3,11 @@ import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shared/components/ui';
 import { FormInput } from '@/shared/components/form';
-import { LoginFormType, loginSchema } from '@/shared/schemas/login-schema';
+
 import toast from 'react-hot-toast';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { LoginFormType, loginSchema } from '../model/schemas/login-schema';
 
 interface Props {
   className?: string;
