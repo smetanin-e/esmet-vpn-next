@@ -1,5 +1,5 @@
 import { RegisterUserType } from '@/features/auth/model/schemas/register-schema';
-import { prisma } from '@/shared/lib';
+import { prisma } from '@/shared/lib/prisma';
 import { generateSalt, hashPassword } from '@/shared/lib/auth/password-utils';
 import { AuthUserType } from '../model/types';
 

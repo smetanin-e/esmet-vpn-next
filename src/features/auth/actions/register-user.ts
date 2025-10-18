@@ -4,6 +4,7 @@ import { UserRole } from '@prisma/client';
 import { getUserSession } from './get-user-session';
 import { RegisterUserType } from '../model/schemas/register-schema';
 import { userRepository } from '@/entities/user/repository/user-repository';
+import { subscriptionRepository } from '@/entities/subscription/repository/subscription-repository';
 
 export const registerUser = async (formData: RegisterUserType) => {
   try {
@@ -17,15 +18,11 @@ export const registerUser = async (formData: RegisterUserType) => {
       return { success: false, message: 'Пользователь с таким логином уже существует' };
     }
 
-    //TODO Добавить позже
-    // const subscription = await prisma.subscription.findFirst({
-    //   where: { id: Number(data.subscription) },
-    // });
+    const subscription = await subscriptionRepository.getSubcriptions();
 
-    // if (!subscription) {
-    //return { success: false, message: 'Подписка не найдена' };
-
-    // }
+    if (!subscription) {
+      return { success: false, message: 'Подписка не найдена' };
+    }
 
     await userRepository.registerUser(formData);
 

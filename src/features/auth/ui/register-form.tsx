@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { registerUserSchema, RegisterUserType } from '../model/schemas/register-schema';
 import { FormInput } from '@/shared/components/form';
 import { registerUser } from '../actions/register-user';
+import { FormSubscriptionSelect } from '@/shared/components/form/form-subscription-select';
 
 interface Props {
   className?: string;
@@ -30,17 +31,16 @@ export const RegisterForm: React.FC<Props> = ({ onClose }) => {
 
   const onSubmit = async (data: RegisterUserType) => {
     try {
-      await registerUser(data);
+      const res = await registerUser(data);
+      if (!res.success) {
+        throw new Error(res.message);
+      }
       toast.success('Аккаунт успешно создан! ✅');
       onClose?.();
       form.reset();
     } catch (error) {
-      if (error instanceof Error) {
-        console.log('Error [REGISTER_FORM]', error);
-        return toast.error(
-          error instanceof Error ? error.message : 'Не удалось создать аккаунт ❌',
-        );
-      }
+      console.log('Error [REGISTER_FORM]', error);
+      return toast.error(error instanceof Error ? error.message : 'Не удалось создать аккаунт ❌');
     }
   };
 
@@ -80,10 +80,7 @@ export const RegisterForm: React.FC<Props> = ({ onClose }) => {
 
         <FormInput label='Телефон' name='phone' id='phone' type='tel' required />
 
-        {/* //TODO СДЕЛАТЬ ПОДПИСКУ */}
-        {/* 
-          <FormSubscriptionSelect required name='subscription' label='Выберите подписку' />
-         */}
+        <FormSubscriptionSelect required name='subscription' label='Выберите подписку' />
 
         <FormInput label='Логин' name='login' id='login' type='text' placeholder='Логин' required />
 
