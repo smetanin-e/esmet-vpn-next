@@ -1,18 +1,19 @@
 'use client';
-import { useRouter } from 'next/navigation';
 import React from 'react';
-import { Button } from './ui';
+
 import { LogOut } from 'lucide-react';
+import { signOut } from 'next-auth/react';
+import { Button } from '@/shared/components/ui';
+import toast from 'react-hot-toast';
 
 interface Props {
   className?: string;
 }
-//TODO ПЕРЕНЕСТИ КОМПОНЕНТ
 export const Logout: React.FC<Props> = () => {
-  const router = useRouter();
+  const logout = async () => {
+    await signOut({ callbackUrl: '/' });
 
-  const logout = () => {
-    router.push('/');
+    toast('Выход из аккаунта');
   };
   return (
     <Button variant={'ghost'} size={'sm'} onClick={logout}>

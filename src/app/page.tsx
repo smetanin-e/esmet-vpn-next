@@ -1,4 +1,4 @@
-import { LoginModal } from '@/features/auth/login/ui/login-modal';
+import { LoginModal } from '@/features/auth/ui/login-modal';
 
 export default async function Home() {
   return (

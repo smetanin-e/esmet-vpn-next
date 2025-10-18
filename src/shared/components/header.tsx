@@ -1,6 +1,5 @@
+import { Logout } from '@/features/auth';
 import React from 'react';
-import { Logout } from './logout';
-
 interface Props {
   className?: string;
   title: string;

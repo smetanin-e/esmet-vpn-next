@@ -9,32 +9,32 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/components/ui';
-
-import { LogIn, TriangleAlert } from 'lucide-react';
-import { LoginForm } from './login-form';
+import { RegisterForm } from './register-form';
 
 interface Props {
   className?: string;
 }
 
-export const LoginModal: React.FC<Props> = () => {
+export const RegisterUser: React.FC<Props> = () => {
   const [open, setOpen] = React.useState(false);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
-          <LogIn className='w-4 h-4' />
-          Войти
+        <Button type='button' variant='outline' size='sm'>
+          Создать пользователя
         </Button>
       </DialogTrigger>
       <DialogContent className='min-w-sm  bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 '>
         <DialogHeader className='space-y-1'>
-          <DialogTitle className='text-2xl font-bold text-center'>Добро пожаловать</DialogTitle>
+          <DialogTitle className='text-2xl font-bold text-center'>
+            Создание пользователя
+          </DialogTitle>
           <DialogDescription className='text-center'>
-            Введите логин и пароль для входа в аккаунт
+            Добавление нового пользователя
           </DialogDescription>
         </DialogHeader>
-        <LoginForm />
+        <RegisterForm setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );

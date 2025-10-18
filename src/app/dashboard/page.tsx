@@ -4,9 +4,23 @@ import { Transactions } from '@/widgets/transactions/ui/transactions';
 
 import { Badge } from '@/shared/components/ui';
 import { Peers } from '@/widgets/peers/ui';
-import { CreatedPeerTrigger } from '@/features/create-peer/ui';
+import { getUserSession } from '@/features/auth/model/server/get-user-session';
+import { redirect } from 'next/navigation';
+import { UserRole } from '@prisma/client';
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const user = await getUserSession();
+
+  if (!user) {
+    return redirect('/not-auth');
+  }
+
+  if (user.role === UserRole.ADMIN) {
+    return redirect('/admin-dashboard');
+  }
+
+  console.log({ user });
+
   return (
     <div className=' min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900'>
       <div className='container mx-auto py-4 px-2'>
@@ -21,7 +35,6 @@ export default function DashboardPage() {
                 Мои конфигурации
               </Badge>
             }
-            action={<CreatedPeerTrigger />}
           />
           <Transactions className=' md:col-start-1 md:row-start-2' />
         </div>
