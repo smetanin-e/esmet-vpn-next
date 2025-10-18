@@ -1,8 +1,7 @@
-import { AuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-
+import { AuthOptions } from 'next-auth';
 import { verifyPassword } from '@/shared/lib/auth/password-utils';
-import { prisma } from '@/shared/lib';
+import { userRepository } from '@/entities/user/repository/user-repository';
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -21,10 +20,7 @@ export const authOptions: AuthOptions = {
           login: credentials.login,
           password: credentials.password,
         };
-        console.log('values====', values);
-        const findUser = await prisma.user.findUnique({
-          where: { login: values.login },
-        });
+        const findUser = await userRepository.findUserByLogin(values.login);
 
         if (!findUser) {
           console.error('[NEXT_AUTH] User not found');
@@ -76,9 +72,7 @@ export const authOptions: AuthOptions = {
 
         // Обновляем из БД только если есть login
         if (token.login) {
-          const findUser = await prisma.user.findFirst({
-            where: { login: token.login },
-          });
+          const findUser = await userRepository.findUserByLogin(token.login);
 
           if (findUser) {
             token.id = String(findUser.id);

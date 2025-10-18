@@ -7,9 +7,9 @@ const phoneRegex = /^\+7\d{3}\d{3}\d{2}\d{2}$/;
 export const registerUserSchema = z
   .object({
     ...loginSchema.shape,
-    // subscription: z.string().min(1, { message: 'Нужно выбрать подписку' }).nullable(),
-    firstName: z.string().min(2, { message: 'Имя должно содержать минимум 2 символа' }),
-    lastName: z.string().min(2, { message: 'Фамилия должна содержать минимум 2 символа' }),
+    subscription: z.string().min(1, { message: 'Нужно выбрать подписку' }).nullable(),
+    firstName: z.string().min(1, { message: 'Нужно ввести имя' }),
+    lastName: z.string().min(1, { message: 'Нужно ввести фамилию' }),
     phone: z.string().regex(phoneRegex, {
       message: 'Номер телефона должен соответствовать формату +79991234567',
     }),

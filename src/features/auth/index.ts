@@ -1,3 +1,4 @@
 export { LoginForm } from './ui/login-form';
-export { LoginModal } from './ui/login-modal';
+export { RegisterForm } from './ui/register-form';
 export { Logout } from './ui/logout';
+export { AuthModal } from './ui/auth-modal';

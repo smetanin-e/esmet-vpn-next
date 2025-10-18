@@ -1,8 +1,10 @@
 import React from 'react';
-import { Badge, Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
+import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
 import { ClientItem } from '@/entities/user/ui/client-item';
 import { cn } from '@/shared/lib/utils';
 import { RegisterUser } from '@/features/auth/ui/register-modal';
+import { AuthModal } from '@/features/auth';
+import { Plus } from 'lucide-react';
 
 interface Props {
   className?: string;
@@ -22,7 +24,17 @@ export const Clients: React.FC<Props> = ({ className }) => {
       <CardHeader className='mb-0 pb-0 flex items-center justify-between space-x-2 text-sm'>
         <CardTitle>Мои клиенты</CardTitle>
 
-        <RegisterUser />
+        <AuthModal
+          title='Создание пользователя'
+          description='Добавление нового пользователя'
+          type='register'
+          trigger={
+            <Button type='button' variant='outline' size='sm'>
+              <Plus className='w-4 h-4' />
+              Создать пользователя
+            </Button>
+          }
+        />
       </CardHeader>
       <CardContent className='space-y-2'>
         <ClientItem />

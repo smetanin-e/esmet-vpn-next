@@ -1,12 +1,12 @@
 import { ClientSubscriptionCard } from '@/widgets/clients/ui/client-subscription-card';
 import { Header } from '@/shared/components/header';
 import { Transactions } from '@/widgets/transactions/ui/transactions';
-
 import { Badge } from '@/shared/components/ui';
 import { Peers } from '@/widgets/peers/ui';
-import { getUserSession } from '@/features/auth/model/server/get-user-session';
+
 import { redirect } from 'next/navigation';
 import { UserRole } from '@prisma/client';
+import { getUserSession } from '@/features/auth/actions/get-user-session';
 
 export default async function DashboardPage() {
   const user = await getUserSession();

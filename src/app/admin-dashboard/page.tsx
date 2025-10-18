@@ -5,9 +5,10 @@ import { Subscriptions } from '@/widgets/subscriptions/ui/subscriptions';
 import { Transactions } from '@/widgets/transactions/ui/transactions';
 import { Badge, Input } from '@/shared/components/ui';
 import { Peers } from '@/widgets/peers/ui';
-import { getUserSession } from '@/features/auth/model/server/get-user-session';
+
 import { redirect } from 'next/navigation';
 import { UserRole } from '@prisma/client';
+import { getUserSession } from '@/features/auth/actions/get-user-session';
 
 export default async function AdminDashboardPage() {
   const user = await getUserSession();

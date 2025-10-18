@@ -6,6 +6,7 @@ import { FormInput } from '@/shared/components/form';
 import { LoginFormType, loginSchema } from '@/shared/schemas/login-schema';
 import toast from 'react-hot-toast';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   className?: string;
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export const LoginForm: React.FC<Props> = ({ onClose }) => {
+  const router = useRouter();
   const form = useForm<LoginFormType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -24,7 +26,7 @@ export const LoginForm: React.FC<Props> = ({ onClose }) => {
     try {
       const res = await signIn('credentials', {
         ...data,
-        callbackUrl: '/dashboard',
+        redirect: false,
       });
 
       if (res?.error) {
@@ -33,7 +35,8 @@ export const LoginForm: React.FC<Props> = ({ onClose }) => {
 
       //закрыть модалку
       onClose?.();
-      toast.success('Добро пожаловать!');
+      router.push('/dashboard');
+      toast.success('Успешная авторизация!');
     } catch (error) {
       console.error('Error [LOGIN]', error);
       return toast.error(error instanceof Error ? error.message : 'Не удалось войти в аккаунт ❌');
@@ -41,29 +44,26 @@ export const LoginForm: React.FC<Props> = ({ onClose }) => {
   };
   return (
     <FormProvider {...form}>
-      <form className='space-y-8' onSubmit={form.handleSubmit(onSubmit)}>
-        <div className='space-y-2'>
-          <FormInput
-            label='Логин'
-            name='login'
-            id='login'
-            type='text'
-            placeholder='Логин...'
-            required
-          />
-        </div>
-        <div className='space-y-2'>
-          <FormInput
-            label='Пароль'
-            name='password'
-            id='password'
-            type='password'
-            placeholder='Введите пароль'
-            required
-          />
-        </div>
+      <form className='space-y-6' onSubmit={form.handleSubmit(onSubmit)}>
+        <FormInput
+          label='Логин'
+          name='login'
+          id='login'
+          type='text'
+          placeholder='Логин...'
+          required
+        />
 
-        <Button disabled={form.formState.isSubmitting} className='w-full' type='submit'>
+        <FormInput
+          label='Пароль'
+          name='password'
+          id='password'
+          type='password'
+          placeholder='Введите пароль'
+          required
+        />
+
+        <Button disabled={form.formState.isSubmitting} className='w-full mt-6' type='submit'>
           Войти
         </Button>
       </form>
