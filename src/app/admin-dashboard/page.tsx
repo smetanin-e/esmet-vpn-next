@@ -6,7 +6,7 @@ import { Badge, Input } from '@/shared/components/ui';
 import { Peers } from '@/widgets/peers/ui';
 import { redirect } from 'next/navigation';
 import { UserRole } from '@prisma/client';
-import { getUserSession } from '@/features/auth/actions/get-user-session';
+import { getUserSession } from '@/features/user/actions/get-user-session';
 
 export default async function AdminDashboardPage() {
   const user = await getUserSession();
@@ -16,11 +16,11 @@ export default async function AdminDashboardPage() {
   return (
     <div className=' min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900'>
       <div className='container mx-auto py-4 px-2'>
-        <Header title='Админ-панель' name={`${user.lastName} ${user.firstName}`} />
+        <Header title='Админ-панель' name={`${user.lastName} ${user.firstName}`} role={user.role} />
         <div className='space-y-8'>
           <Subscriptions />
-          <div className=' md:grid md:grid-cols-[1fr_370px] md:gap-6 '>
-            <Clients className='mb-8 md:mb-0' />
+          <div className=' lg:grid lg:grid-cols-[1fr_370px] lg:gap-6 '>
+            <Clients className='mb-8 lg:mb-0' />
             <Transactions />
           </div>
 

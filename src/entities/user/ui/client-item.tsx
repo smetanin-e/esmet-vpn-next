@@ -1,25 +1,41 @@
 import React from 'react';
-import { Trash2 } from 'lucide-react';
+import { Send, Trash2 } from 'lucide-react';
 import { AlertDialog, PeersQuantity } from '@/shared/components';
 import { Button, Switch } from '@/shared/components/ui';
+import { UserDTO } from '../model/types';
+import Link from 'next/link';
 
 interface Props {
   className?: string;
+  user: UserDTO;
 }
-
-export const ClientItem: React.FC<Props> = () => {
+//TODO ЕСЛИ НАДО, ДОБАВИТЬ БАЛАНС КАЖДОГО ПОЛЬЗОВАТЕЛЯ
+//!ДОБАВИТЬ СКРОЛ НА СПИСОК ПОЛЬЗОВАТЕЛЕЙ И ПОИСК
+export const ClientItem: React.FC<Props> = ({ user }) => {
   return (
     <div className='space-y-4'>
       <div className='p-4 bg-slate-900/50 rounded-lg border border-slate-700 hover:border-slate-600 transition-colors'>
-        <div className='flex items-center justify-between space-x-2'>
-          <p className=' text-sm mb-1'>Сметанин Евгений</p>
-          <div className='flex items-center space-x-6'>
+        <div className='sm:flex sm:items-center sm:justify-between sm:space-x-2'>
+          <div className='flex space-x-4 items-center justify-between mb-2 sm:block sm:mb-0'>
+            <p className=' text-sm'>{`${user.lastName} ${user.firstName}`}</p>
+            <p>{user.login}</p>
+          </div>
+
+          <div className='flex items-center justify-between space-x-6'>
+            <Link href={user.telegram} target='_blank'>
+              <Button
+                size={'sm'}
+                className='bg-blue-500 text-white rounded-full h-8 w-8 hover:bg-blue-400 hover:text-white'
+              >
+                <Send />
+              </Button>
+            </Link>
             <div className='flex space-x-2'>
-              <PeersQuantity />
+              <PeersQuantity peers={user.peers} />
             </div>
 
             <Switch
-              checked={true}
+              checked={user.status}
               className='data-[state=checked]:bg-success data-[state=unchecked]:bg-gray-400'
             />
 

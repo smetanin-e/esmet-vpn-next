@@ -1,6 +1,6 @@
 'use server';
 
-import { getUserSession } from '@/features/auth/actions/get-user-session';
+import { getUserSession } from '@/features/user/actions/get-user-session';
 import { SubscriptionFormType } from '../model/schemas/subcription-schema';
 import { UserRole } from '@prisma/client';
 import { subscriptionRepository } from '@/entities/subscription/repository/subscription-repository';

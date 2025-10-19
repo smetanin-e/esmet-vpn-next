@@ -21,7 +21,7 @@ export const Subscriptions: React.FC<Props> = () => {
         <SubscriptionModal />
       </CardHeader>
       <CardContent>
-        <div className='grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-4 justify-center'>
+        <div className='grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4 justify-center'>
           {isLoading ? (
             <div>Loading</div>
           ) : (

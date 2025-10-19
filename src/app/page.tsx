@@ -1,5 +1,5 @@
-import { AuthModal } from '@/features/auth';
-import { getUserSession } from '@/features/auth/actions/get-user-session';
+import { AuthModal } from '@/features/auth-modal/ui/auth-modal';
+import { getUserSession } from '@/features/user/actions/get-user-session';
 import { Button } from '@/shared/components/ui';
 import { LogIn } from 'lucide-react';
 import { redirect } from 'next/navigation';

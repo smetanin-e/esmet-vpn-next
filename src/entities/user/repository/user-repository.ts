@@ -1,14 +1,14 @@
-import { RegisterUserType } from '@/features/auth/model/schemas/register-schema';
+import { RegisterUserType } from '@/features/user/schemas/register-schema';
 import { prisma } from '@/shared/lib/prisma';
 import { generateSalt, hashPassword } from '@/shared/lib/auth/password-utils';
-import { AuthUserType } from '../model/types';
+import { UserDTO } from '../model/types';
 
 export const userRepository = {
   async findUserByLogin(login: string) {
     return prisma.user.findUnique({ where: { login } });
   },
-
-  async findAuthUserById(userId: number): Promise<AuthUserType | null> {
+  //TODO ИСПРАВИТЬ ТАК КАК АВТОРИЗОВАННЫЙ ПОЛЬЗОВАТЕЛЬ ДОЛЖЕН ИМЕТЬ ПОДПИСКИ ПИРЫ И ТРАНЗАКЦИИ
+  async findUserById(userId: number): Promise<UserDTO | null> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -20,8 +20,17 @@ export const userRepository = {
         lastName: true,
         balance: true,
         subsEnd: true,
+        telegram: true,
         subscription: {
-          select: { name: true, dailyPrice: true, maxPeers: true, description: true },
+          select: { name: true, dailyPrice: true, maxPeers: true, description: true, active: true },
+        },
+        peers: {
+          select: { peerName: true, status: true },
+          orderBy: { peerName: 'asc' },
+        },
+        transactions: {
+          select: { type: true, description: true, status: true, createdAt: true, amount: true },
+          orderBy: { createdAt: 'desc' },
         },
       },
     });
@@ -49,13 +58,29 @@ export const userRepository = {
     });
   },
 
-  async findUserWithRelations(userId: number) {
-    return prisma.user.findUnique({
-      where: { id: userId },
-      include: {
-        subscription: true,
-        transactions: true,
-        peers: true,
+  async findAllUsersWithRelations(): Promise<UserDTO[] | null> {
+    return await prisma.user.findMany({
+      select: {
+        id: true,
+        login: true,
+        role: true,
+        firstName: true,
+        status: true,
+        lastName: true,
+        balance: true,
+        subsEnd: true,
+        telegram: true,
+        subscription: {
+          select: { name: true, dailyPrice: true, maxPeers: true, description: true, active: true },
+        },
+        peers: {
+          select: { peerName: true, status: true },
+          orderBy: { peerName: 'asc' },
+        },
+        transactions: {
+          select: { type: true, description: true, status: true, createdAt: true, amount: true },
+          orderBy: { createdAt: 'desc' },
+        },
       },
     });
   },

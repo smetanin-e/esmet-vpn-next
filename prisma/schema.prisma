@@ -36,7 +36,7 @@ model User {
     peers        WireguardPeer[]
     transactions Transaction[]
 
-    subscriptionId Int?          @unique
+    subscriptionId Int?
     subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
 }
 

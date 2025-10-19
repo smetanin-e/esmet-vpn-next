@@ -9,8 +9,8 @@ import {
   DialogTrigger,
 } from '@/shared/components/ui';
 
-import { LoginForm } from './login-form';
-import { RegisterForm } from './register-form';
+import { LoginForm } from '../../auth/ui/login-form';
+import { RegisterForm } from '../../user/ui/register-form';
 
 interface Props {
   className?: string;

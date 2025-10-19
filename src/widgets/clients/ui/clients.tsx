@@ -1,16 +1,19 @@
+'use client';
 import React from 'react';
 import { Badge, Button, Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
 import { ClientItem } from '@/entities/user/ui/client-item';
 import { cn } from '@/shared/lib/utils';
-import { RegisterUser } from '@/features/auth/ui/register-modal';
-import { AuthModal } from '@/features/auth';
+
 import { Plus } from 'lucide-react';
+import { useGetUsers } from '@/entities/user/api/use-get-users';
+import { AuthModal } from '@/features/auth-modal/ui/auth-modal';
 
 interface Props {
   className?: string;
 }
 
 export const Clients: React.FC<Props> = ({ className }) => {
+  const { data, isLoading } = useGetUsers();
   return (
     <Card
       className={cn(
@@ -37,8 +40,11 @@ export const Clients: React.FC<Props> = ({ className }) => {
         />
       </CardHeader>
       <CardContent className='space-y-2'>
-        <ClientItem />
-        <ClientItem />
+        {isLoading ? (
+          <div>Загрузка</div>
+        ) : (
+          data?.map((user) => <ClientItem key={user.id} user={user} />)
+        )}
       </CardContent>
     </Card>
   );

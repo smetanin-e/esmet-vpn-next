@@ -5,6 +5,7 @@ export type UserSubscription = {
   dailyPrice: number;
   description: string;
   maxPeers: number;
+  active: boolean;
 };
 
 export type SubscriptionType = Subscription;
