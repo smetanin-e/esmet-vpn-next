@@ -18,8 +18,9 @@ interface Props {
 export const Peers: React.FC<Props> = ({ className, label, client }) => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useGetPeers(14, 1);
   const peers = data?.pages.flatMap((page) => page.peers) ?? [];
+  console.log('hasNextPage:', hasNextPage);
 
-  console.log(peers);
+  console.log(data);
   return (
     <Card
       className={cn(
@@ -36,21 +37,16 @@ export const Peers: React.FC<Props> = ({ className, label, client }) => {
           <CardTitle>Конфигурация WireGuard</CardTitle>
           <div className='flex items-center justify-between space-x-6 text-sm'>
             <div className='flex space-x-6'>
-              <PeersQuantity peers={[]} />
+              <PeersQuantity peers={peers} />
             </div>
             <CreatePeerModal />
           </div>
         </CardHeader>
         <CardContent className='space-y-2 p-1 md:h-[550px] overflow-y-scroll'>
-          <PeerItem client={client} />
-          <PeerItem client={client} />
-          <PeerItem client={client} />
-          <PeerItem client={client} />
-          <PeerItem client={client} />
-          <PeerItem client={client} />
-          <PeerItem client={client} />
-          <PeerItem client={client} />
-          <PeerItem client={client} />
+          {peers.map((peer) => (
+            <PeerItem key={peer.id} peer={peer} />
+          ))}
+
           {hasNextPage && (
             <ShowMore onClick={() => fetchNextPage()} disabled={isFetchingNextPage} />
           )}

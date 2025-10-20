@@ -23,6 +23,6 @@ export const useGetPeers = (userId?: number, limit = 5) => {
       });
       return data;
     },
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
   });
 };

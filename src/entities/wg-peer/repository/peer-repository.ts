@@ -51,7 +51,7 @@ export const peerRepository = {
     const peers = await prisma.wireguardPeer.findMany({
       where: userId ? { userId } : {},
       orderBy: { id: 'desc' },
-      take: limit + 1, // +1, чтобы понять, есть ли ещё
+      take: Number(limit) + 1, // +1, чтобы понять, есть ли ещё
       ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
       select: {
         id: true,
