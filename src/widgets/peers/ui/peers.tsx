@@ -4,6 +4,7 @@ import { cn } from '@/shared/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
 import { PeerItem } from '@/entities/wg-peer/ui';
 import { PeersQuantity } from '@/shared/components';
+import { CreatePeerModal } from '@/features/wg-peer/actions/ui/create-peer-modal';
 
 interface Props {
   className?: string;
@@ -29,9 +30,9 @@ export const Peers: React.FC<Props> = ({ className, label, action, client }) => 
           <CardTitle>Конфигурация WireGuard</CardTitle>
           <div className='flex items-center justify-between space-x-6 text-sm'>
             <div className='flex space-x-6'>
-              <PeersQuantity />
+              <PeersQuantity peers={[]} />
             </div>
-            {action}
+            <CreatePeerModal />
           </div>
         </CardHeader>
         <CardContent className='space-y-2 p-1 md:h-[550px] overflow-y-scroll'>
