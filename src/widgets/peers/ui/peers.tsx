@@ -1,10 +1,12 @@
+'use client';
 import React from 'react';
 
 import { cn } from '@/shared/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
 import { PeerItem } from '@/entities/wg-peer/ui';
-import { PeersQuantity } from '@/shared/components';
+import { PeersQuantity, ShowMore } from '@/shared/components';
 import { CreatePeerModal } from '@/features/wg-peer/actions/ui/create-peer-modal';
+import { useGetPeers } from '@/entities/wg-peer/api/use-get-peers';
 
 interface Props {
   className?: string;
@@ -13,7 +15,11 @@ interface Props {
   client?: string;
 }
 
-export const Peers: React.FC<Props> = ({ className, label, action, client }) => {
+export const Peers: React.FC<Props> = ({ className, label, client }) => {
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useGetPeers(14, 1);
+  const peers = data?.pages.flatMap((page) => page.peers) ?? [];
+
+  console.log(peers);
   return (
     <Card
       className={cn(
@@ -45,6 +51,9 @@ export const Peers: React.FC<Props> = ({ className, label, action, client }) => 
           <PeerItem client={client} />
           <PeerItem client={client} />
           <PeerItem client={client} />
+          {hasNextPage && (
+            <ShowMore onClick={() => fetchNextPage()} disabled={isFetchingNextPage} />
+          )}
         </CardContent>
       </>
       {/* )} */}

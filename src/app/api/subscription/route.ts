@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     const subscriptions = await subscriptionRepository.getSubcriptions();
     return NextResponse.json(subscriptions);
   } catch (error) {
-    console.error('[API_SUBSCRIPTIPN_GET]', error);
+    console.error('[API_SUBSCRIPTION_GET]', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
