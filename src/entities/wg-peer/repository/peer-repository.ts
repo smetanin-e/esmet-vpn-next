@@ -5,26 +5,8 @@ import axios from 'axios';
 
 export const peerRepository = {
   //Получаем все пиры из БД
-  async getAllPeers() {
+  async getAllPeers(take: number | undefined, skip: number | undefined) {
     return prisma.wireguardPeer.findMany({
-      select: {
-        id: true,
-        peerName: true,
-        status: true,
-        createdAt: true,
-        userId: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 100,
-    });
-  },
-
-  //Получаем пиры из БД по userId
-  async getPeersByUserId(userId: number) {
-    return prisma.wireguardPeer.findMany({
-      where: { userId },
       select: {
         id: true,
         peerName: true,
@@ -36,8 +18,72 @@ export const peerRepository = {
       orderBy: {
         createdAt: 'desc',
       },
+      take,
+      skip,
     });
   },
+
+  //Получаем пиры из БД по userId
+  async getPeersByUserId(userId: number, take?: number, skip?: number) {
+    return prisma.wireguardPeer.findMany({
+      where: { userId },
+      select: {
+        id: true,
+        peerName: true,
+        status: true,
+        user: {
+          select: { login: true, firstName: true, lastName: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take,
+      skip,
+    });
+  },
+
+  async getAllPeersFiltered(search: string, take?: number, skip?: number) {
+    return prisma.wireguardPeer.findMany({
+      where: search
+        ? {
+            user: {
+              OR: [
+                { lastName: { contains: search, mode: 'insensitive' } },
+                { firstName: { contains: search, mode: 'insensitive' } },
+                { login: { contains: search, mode: 'insensitive' } },
+              ],
+            },
+          }
+        : {},
+      select: {
+        id: true,
+        peerName: true,
+        status: true,
+        user: {
+          select: { login: true, firstName: true, lastName: true },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+      take,
+      skip,
+    });
+  },
+
+  //   async getPeersByUserId(userId: number) {
+  //     return prisma.wireguardPeer.findMany({
+  //       where: { userId },
+  //       select: {
+  //         id: true,
+  //         peerName: true,
+  //         status: true,
+  //         user: {
+  //           select: { login: true, firstName: true, lastName: true },
+  //         },
+  //       },
+  //       orderBy: {
+  //         createdAt: 'desc',
+  //       },
+  //     });
+  //   },
 
   async getPeersPaginated({
     userId,

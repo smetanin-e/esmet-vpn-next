@@ -15,12 +15,20 @@ interface Props {
   client?: string;
 }
 
-export const Peers: React.FC<Props> = ({ className, label, client }) => {
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useGetPeers(14, 1);
+export const Peers: React.FC<Props> = ({ className, label }) => {
+  const { data, status, error, hasNextPage, fetchNextPage, isFetchingNextPage } = useGetPeers();
   const peers = data?.pages.flatMap((page) => page.peers) ?? [];
-  console.log('hasNextPage:', hasNextPage);
+  if (status === 'pending') {
+    return <div className='p-4'>Загрузка пиров...</div>;
+  }
 
-  console.log(data);
+  if (status === 'error') {
+    return (
+      <div className='p-4 text-red-500'>
+        Ошибка: {error instanceof Error ? error.message : 'Не удалось получить список пиров ❌'}
+      </div>
+    );
+  }
   return (
     <Card
       className={cn(
