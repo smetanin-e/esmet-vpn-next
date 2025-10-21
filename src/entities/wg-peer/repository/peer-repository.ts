@@ -4,13 +4,6 @@ import { WgPeerStatus } from '@prisma/client';
 import axios from 'axios';
 
 export const peerRepository = {
-  //Получаем количество пиров
-  async totalCountPeers(userId?: number) {
-    return await prisma.wireguardPeer.count({
-      where: userId ? { userId } : undefined,
-    });
-  },
-
   //Получаем пиры из БД по userId
   async getPeersByUserId(userId: number, take?: number, skip?: number) {
     return prisma.wireguardPeer.findMany({

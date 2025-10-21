@@ -1,6 +1,5 @@
 import { PeerQueryType } from '@/entities/wg-peer/model/types';
 import { axiosInstance } from '@/shared/service/instance';
-import { number } from 'zod';
 
 interface FetchPeersParams {
   pageParam?: number; // номер страницы для useInfiniteQuery
@@ -14,30 +13,25 @@ export const fetchPeers = async ({
   peers: PeerQueryType[];
   nextPage: number | undefined;
 }> => {
-  const take = 2;
+  const take = 5;
   const skip = pageParam * take;
-  const query = new URLSearchParams({
-    take: take.toString(),
-    skip: skip.toString(),
+  const params = new URLSearchParams();
+  params.set('take', take.toString());
+  params.set('skip', skip.toString());
+  if (search.trim()) params.set('search', search.trim());
+  const { data } = await axiosInstance.get<PeerQueryType[]>(`/peer?${params.toString()}`, {
+    headers: {
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_READ_KEY}`,
+    },
   });
 
-  if (search) {
-    query.set('search', search);
-  }
-  const { peers, totalCount } = (
-    await axiosInstance.get<{ peers: PeerQueryType[]; totalCount: number }>(
-      `/peer?take=${take}&skip=${skip}`,
-      { headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_READ_KEY}` } },
-    )
-  ).data;
-
-  if (!peers) {
+  if (!data) {
     throw new Error('Ошибка при загрузке пиров');
   }
 
-  const nextPage = skip + peers.length < totalCount ? pageParam + 1 : undefined;
+  const hasMore = data.length === take;
   return {
-    peers: peers,
-    nextPage,
+    peers: data,
+    nextPage: hasMore ? pageParam + 1 : undefined,
   };
 };

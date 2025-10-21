@@ -23,14 +23,13 @@ export async function GET(req: NextRequest) {
     // 🧍 Пользователь → только свои пиры
     if (user.role !== 'ADMIN') {
       const peers = await peerRepository.getPeersByUserId(user.id, take, skip);
-      const totalCount = await peerRepository.totalCountPeers(user.id);
-      return NextResponse.json({ peers, totalCount });
+
+      return NextResponse.json(peers);
     }
 
     // 🧑‍💼 Админ → может фильтровать по имени/фамилии/login
     const peers = await peerRepository.getAllPeersFiltered(search, take, skip);
-    const totalCount = await peerRepository.totalCountPeers();
-    return NextResponse.json({ peers, totalCount });
+    return NextResponse.json(peers);
   } catch (error) {
     console.error('[API_PEER_GET]', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
