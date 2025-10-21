@@ -1,5 +1,6 @@
 import { PeerQueryType } from '@/entities/wg-peer/model/types';
 import { axiosInstance } from '@/shared/service/instance';
+import { number } from 'zod';
 
 interface FetchPeersParams {
   pageParam?: number; // номер страницы для useInfiniteQuery
@@ -23,19 +24,20 @@ export const fetchPeers = async ({
   if (search) {
     query.set('search', search);
   }
-  const { data } = await axiosInstance.get<PeerQueryType[]>(`/peer?${query.toString()}`, {
-    headers: {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_READ_KEY}`,
-    },
-  });
+  const { peers, totalCount } = (
+    await axiosInstance.get<{ peers: PeerQueryType[]; totalCount: number }>(
+      `/peer?take=${take}&skip=${skip}`,
+      { headers: { Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_READ_KEY}` } },
+    )
+  ).data;
 
-  if (!data) {
+  if (!peers) {
     throw new Error('Ошибка при загрузке пиров');
   }
 
-  const hasMore = data.length === take;
+  const nextPage = skip + peers.length < totalCount ? pageParam + 1 : undefined;
   return {
-    peers: data,
-    nextPage: hasMore ? pageParam + 1 : undefined,
+    peers: peers,
+    nextPage,
   };
 };
