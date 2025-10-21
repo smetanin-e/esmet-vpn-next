@@ -15,11 +15,15 @@ export const fetchPeers = async ({
 }> => {
   const take = 2;
   const skip = pageParam * take;
-  const params = new URLSearchParams();
-  params.set('take', take.toString());
-  params.set('skip', skip.toString());
-  if (search.trim()) params.set('search', search.trim());
-  const { data } = await axiosInstance.get<PeerQueryType[]>(`/peer?${params.toString()}`, {
+  const query = new URLSearchParams({
+    take: take.toString(),
+    skip: skip.toString(),
+  });
+
+  if (search) {
+    query.set('search', search);
+  }
+  const { data } = await axiosInstance.get<PeerQueryType[]>(`/peer?${query.toString()}`, {
     headers: {
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_READ_KEY}`,
     },

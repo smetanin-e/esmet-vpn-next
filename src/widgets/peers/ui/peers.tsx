@@ -2,24 +2,33 @@
 import React from 'react';
 
 import { cn } from '@/shared/lib/utils';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
+import { Card, CardContent, CardHeader, CardTitle, Input } from '@/shared/components/ui';
 import { PeerItem } from '@/entities/wg-peer/ui';
-import { PeersQuantity, ShowMore } from '@/shared/components';
+import { CleareButton, PeersQuantity, ShowMore } from '@/shared/components';
 import { CreatePeerModal } from '@/features/wg-peer/actions/ui/create-peer-modal';
 import { useGetPeers } from '@/entities/wg-peer/api/use-get-peers';
+import { UserRole } from '@prisma/client';
 
 interface Props {
   className?: string;
   label: React.ReactNode;
-  action?: React.ReactNode;
-  client?: string;
+  userRole?: UserRole;
 }
 
-export const Peers: React.FC<Props> = ({ className, label }) => {
-  const { data, status, error, hasNextPage, fetchNextPage, isFetchingNextPage } = useGetPeers();
+export const Peers: React.FC<Props> = ({ className, label, userRole }) => {
+  const [searchValue, setSearchValue] = React.useState('');
+  const { data, status, error, hasNextPage, fetchNextPage, isFetchingNextPage } =
+    useGetPeers(searchValue);
   const peers = data?.pages.flatMap((page) => page.peers) ?? [];
+
+  // Сбрасываем search при уходе со страницы
+  React.useEffect(() => {
+    return () => {
+      setSearchValue('');
+    };
+  }, []);
   if (status === 'pending') {
-    return <div className='p-4'>Загрузка пиров...</div>;
+    return <div className='p-4'>Загрузка пиров...</div>; //TODO ИСПРАВИТЬ ВЕРСТКУ И ОТОБРАЖЕНИЕ ЗАГРУЗКИ
   }
 
   if (status === 'error') {
@@ -29,7 +38,9 @@ export const Peers: React.FC<Props> = ({ className, label }) => {
       </div>
     );
   }
+
   return (
+    //TODO Сделать чтобы верстка не прыгала при загрузке данных
     <Card
       className={cn(
         'bg-slate-800/50 border-blue-600 backdrop-blur-sm relative  max-w-full',
@@ -47,6 +58,19 @@ export const Peers: React.FC<Props> = ({ className, label }) => {
             <div className='flex space-x-6'>
               <PeersQuantity peers={peers} />
             </div>
+            {userRole && (
+              <div className='w-xl relative'>
+                <Input
+                  placeholder='Поиск по логину или имени клиента'
+                  className=''
+                  type='text'
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                />
+                {searchValue && <CleareButton onClick={() => setSearchValue('')} />}
+              </div>
+            )}
+
             <CreatePeerModal />
           </div>
         </CardHeader>

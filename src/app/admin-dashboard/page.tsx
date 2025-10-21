@@ -2,7 +2,7 @@ import { Clients } from '@/widgets/clients/ui/clients';
 import { Header } from '@/shared/components/header';
 import { Subscriptions } from '@/widgets/subscriptions/ui/subscriptions';
 import { Transactions } from '@/widgets/transactions/ui/transactions';
-import { Badge, Input } from '@/shared/components/ui';
+import { Badge } from '@/shared/components/ui';
 import { Peers } from '@/widgets/peers/ui';
 import { redirect } from 'next/navigation';
 import { UserRole } from '@prisma/client';
@@ -25,8 +25,7 @@ export default async function AdminDashboardPage() {
           </div>
 
           <Peers
-            client='Сметанин Евгений'
-            action={<Input className='max-w-2xs' placeholder='Поиск...' />}
+            userRole={user.role}
             label={
               <Badge className='absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white'>
                 Все конфигурации
