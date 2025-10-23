@@ -1,4 +1,4 @@
-import { RegisterUserType } from '@/features/user/schemas/register-schema';
+import { RegisterUserType } from '@/features/user/model/schemas/register-schema';
 import { prisma } from '@/shared/lib/prisma';
 import { generateSalt, hashPassword } from '@/shared/lib/auth/password-utils';
 import { UserDTO } from '../model/types';
@@ -9,7 +9,7 @@ export const userRepository = {
   },
   //TODO ИСПРАВИТЬ ТАК КАК АВТОРИЗОВАННЫЙ ПОЛЬЗОВАТЕЛЬ ДОЛЖЕН ИМЕТЬ ПОДПИСКИ ПИРЫ И ТРАНЗАКЦИИ
   async findUserById(userId: number): Promise<UserDTO | null> {
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: { id: userId },
       select: {
         id: true,

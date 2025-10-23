@@ -13,7 +13,7 @@ export const peerRepository = {
         peerName: true,
         status: true,
         user: {
-          select: { login: true, firstName: true, lastName: true },
+          select: { id: true, login: true, firstName: true, lastName: true },
         },
       },
       orderBy: { createdAt: 'desc' },
@@ -78,6 +78,59 @@ export const peerRepository = {
     } catch (error) {
       console.error('[getWgServerPeerConfig] Server error', error);
       return null;
+    }
+  },
+
+  // Поиск пира по id
+  async findPeerById(peerId: number) {
+    return prisma.wireguardPeer.findUnique({
+      where: { id: peerId },
+    });
+  },
+
+  // обновление статуса пира по id
+  async updatePeerStatus(peerId: number, status: WgPeerStatus) {
+    return prisma.wireguardPeer.update({
+      where: { id: peerId },
+      data: {
+        status,
+      },
+    });
+  },
+
+  //Деактивируем пир
+  async deactivatePeer(peerId: number) {
+    try {
+      // Деактивируем на сервере WireGuard через wg-rest-api
+      await axios.patch(
+        `${process.env.WG_API_URL}/api/clients/${peerId}`,
+        { enable: false },
+        { headers: { Authorization: `Bearer ${process.env.WG_API_TOKEN}` } },
+      );
+
+      await this.updatePeerStatus(peerId, WgPeerStatus.INACTIVE);
+      return { success: true };
+    } catch (error) {
+      console.error('[deactivatePeer] Server error', error);
+      return { success: false, message: 'Ошибка дективации пира' };
+    }
+  },
+
+  //Активируем пир
+  async activatePeer(peerId: number) {
+    try {
+      // Активируем на сервере WireGuard через wg-rest-api
+      await axios.patch(
+        `${process.env.WG_API_URL}/api/clients/${peerId}`,
+        { enable: true },
+        { headers: { Authorization: `Bearer ${process.env.WG_API_TOKEN}` } },
+      );
+
+      await this.updatePeerStatus(peerId, WgPeerStatus.ACTIVE);
+      return { success: true };
+    } catch (error) {
+      console.error('[deactivatePeer] Server error', error);
+      return { success: false, message: 'Ошибка активации пира' };
     }
   },
 

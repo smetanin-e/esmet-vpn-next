@@ -2,7 +2,7 @@
 import { UserRole } from '@prisma/client';
 
 import { getUserSession } from './get-user-session';
-import { RegisterUserType } from '../schemas/register-schema';
+import { RegisterUserType } from '../model/schemas/register-schema';
 import { userRepository } from '@/entities/user/repository/user-repository';
 import { subscriptionRepository } from '@/entities/subscription/repository/subscription-repository';
 

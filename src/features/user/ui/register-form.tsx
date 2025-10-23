@@ -5,11 +5,10 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { AtSign } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
-import { registerUserSchema, RegisterUserType } from '../schemas/register-schema';
+import { registerUserSchema, RegisterUserType } from '../model/schemas/register-schema';
 import { FormInput } from '@/shared/components/form';
-import { registerUser } from '../actions/register-user';
 import { FormSubscriptionSelect } from '@/shared/components/form/form-subscription-select';
-import { queryClient } from '@/shared/lib';
+import { useUserMutations } from '../model/hooks/use-user-mutation';
 
 interface Props {
   className?: string;
@@ -30,13 +29,14 @@ export const RegisterForm: React.FC<Props> = ({ onClose }) => {
     },
   });
 
+  const { register } = useUserMutations();
+
   const onSubmit = async (data: RegisterUserType) => {
     try {
-      const res = await registerUser(data);
+      const res = await register.mutateAsync(data);
       if (!res.success) {
         throw new Error(res.message);
       }
-      queryClient.invalidateQueries({ queryKey: ['users'] });
       toast.success('Аккаунт успешно создан! ✅');
       onClose?.();
       form.reset();

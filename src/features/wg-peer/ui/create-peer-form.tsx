@@ -5,8 +5,8 @@ import toast from 'react-hot-toast';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { createPeerSchema, CreatePeerType } from '../../model/schemas/create-peer-schema';
-import { createPeer } from '../create-peer';
+import { createPeerSchema, CreatePeerType } from '../model/schemas/create-peer-schema';
+import { createPeer } from '../actions/create-peer';
 
 import { Button } from '@/shared/components/ui';
 import { FormInput } from '@/shared/components/form';

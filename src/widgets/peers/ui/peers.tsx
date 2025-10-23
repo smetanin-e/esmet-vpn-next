@@ -5,7 +5,7 @@ import { cn } from '@/shared/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle, Input } from '@/shared/components/ui';
 import { PeerItem } from '@/entities/wg-peer/ui';
 import { CleareButton, PeersQuantity, ShowMore } from '@/shared/components';
-import { CreatePeerModal } from '@/features/wg-peer/actions/ui/create-peer-modal';
+import { CreatePeerModal } from '@/features/wg-peer/ui/create-peer-modal';
 import { useGetPeers } from '@/entities/wg-peer/api/use-get-peers';
 import { UserRole } from '@prisma/client';
 

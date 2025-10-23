@@ -1,8 +1,10 @@
 import { AlertDialog, WgLogo } from '@/shared/components';
-import { Button, Switch } from '@/shared/components/ui';
+import { Button } from '@/shared/components/ui';
 import { Download, QrCode, Trash2 } from 'lucide-react';
 import React from 'react';
 import { PeerQueryType } from '../model/types';
+import { ChangePeerStatus } from './change-peer-status';
+import { cn } from '@/shared/lib';
 import { WgPeerStatus } from '@prisma/client';
 
 interface Props {
@@ -10,12 +12,18 @@ interface Props {
 
   peer: PeerQueryType;
 }
-// ? "bg-slate-900/50 border-slate-700 hover:border-slate-600"
-// : "bg-slate-800/40 border-slate-800 opacity-50 "    pointer-events-none
+
 export const PeerItem: React.FC<Props> = ({ peer }) => {
   return (
     <div className='space-y-4'>
-      <div className='p-4 bg-slate-900/50 rounded-lg border border-slate-700 hover:border-slate-600 transition-colors'>
+      <div
+        className={cn(
+          peer.status === WgPeerStatus.ACTIVE
+            ? 'bg-slate-900/50 border-slate-700 hover:border-slate-600 '
+            : 'bg-slate-800/40 border-slate-800 opacity-80',
+          'p-4 transition-colors',
+        )}
+      >
         {peer.user && (
           <p className='text-right text-sm mb-1'>{`${peer.user.lastName} ${peer.user.firstName}`}</p>
         )}
@@ -29,12 +37,7 @@ export const PeerItem: React.FC<Props> = ({ peer }) => {
           </div>
 
           <div className='flex items-center justify-end gap-4'>
-            <div className='text-right md:text-center'>
-              <Switch
-                checked={peer.status === WgPeerStatus.ACTIVE}
-                className='data-[state=checked]:bg-success data-[state=unchecked]:bg-gray-400'
-              />
-            </div>
+            <ChangePeerStatus id={peer.id} status={peer.status} userId={peer.user.id} />
             <div>
               <Button size={'icon'} variant='outline'>
                 <Download className='w-4 h-4' />
@@ -42,7 +45,7 @@ export const PeerItem: React.FC<Props> = ({ peer }) => {
             </div>
             <div>
               {' '}
-              <Button size={'icon'} variant='outline'>
+              <Button size={'icon'} variant='outline' onClick={() => alert(peer.id)}>
                 <QrCode className='w-4 h-4' />
               </Button>
             </div>

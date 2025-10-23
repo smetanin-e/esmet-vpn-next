@@ -5,5 +5,5 @@ export type PeerQueryType = {
   id: number;
   peerName: string;
   status: WgPeerStatus;
-  user: Pick<User, 'login' | 'firstName' | 'lastName'>;
+  user: Pick<User, 'id' | 'login' | 'firstName' | 'lastName'>;
 };
