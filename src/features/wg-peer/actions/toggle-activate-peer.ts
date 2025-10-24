@@ -3,12 +3,12 @@ import { userRepository } from '@/entities/user/repository/user-repository';
 import { peerRepository } from '@/entities/wg-peer/repository/peer-repository';
 import { WgPeerStatus } from '@prisma/client';
 
-type payload = {
+type TogglePeerData = {
   peerId: number;
   userId: number;
 };
 
-export async function toggleActivatePeer(data: payload) {
+export async function togglePeerStatusAction(data: TogglePeerData) {
   try {
     const user = await userRepository.findUserById(data.userId);
     if (!user || !user.status) {

@@ -73,8 +73,16 @@ export const peerRepository = {
         headers: { Authorization: `Bearer ${process.env.WG_API_TOKEN}` },
         responseType: 'text',
       });
+      let config = res.data;
+      // Исправляем DNS и PersistentKeepalive если не установлены
+      if (!config.includes('DNS')) {
+        config = config.replace('[Interface]', `[Interface]\nDNS = 1.1.1.1`);
+      }
+      if (!config.includes('PersistentKeepalive')) {
+        config = config.replace('Endpoint =', 'PersistentKeepalive = 25\nEndpoint =');
+      }
 
-      return res.data;
+      return config;
     } catch (error) {
       console.error('[getWgServerPeerConfig] Server error', error);
       return null;
@@ -131,6 +139,28 @@ export const peerRepository = {
     } catch (error) {
       console.error('[deactivatePeer] Server error', error);
       return { success: false, message: 'Ошибка активации пира' };
+    }
+  },
+
+  //Удаляем пир
+  async deletePeer(peerId: number) {
+    try {
+      // Удаляем на сервере WireGuard через wg-rest-api
+      await axios.delete(
+        `${process.env.WG_API_URL}/api/clients/${peerId}`,
+
+        { headers: { Authorization: `Bearer ${process.env.WG_API_TOKEN}` } },
+      );
+
+      //Удаляем из БД
+      await prisma.wireguardPeer.delete({
+        where: { id: peerId },
+      });
+
+      return { success: true };
+    } catch (error) {
+      console.error('[deletePeer] Server error', error);
+      return { success: false, message: 'Ошибка удаления пира' };
     }
   },
 

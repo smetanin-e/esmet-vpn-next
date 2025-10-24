@@ -13,17 +13,17 @@ interface Props {
 }
 
 export const ChangePeerStatus: React.FC<Props> = ({ id, userId, status }) => {
-  const { toggleStatus } = usePeerMutations();
+  const { togglePeerStatus } = usePeerMutations();
   const handleToggle = async (id: number, userId: number) => {
     try {
-      await toggleStatus.mutateAsync({ peerId: id, userId });
+      await togglePeerStatus.mutateAsync({ peerId: id, userId });
     } catch (error) {
       console.error('Failed to toggle peer status', error);
     }
   };
   return (
     <div className='text-right md:text-center'>
-      {toggleStatus.isLoading ? (
+      {togglePeerStatus.isLoading ? (
         <div className='flex items-center justify-center'>
           <Spinner className='w-8 h-8' />
         </div>

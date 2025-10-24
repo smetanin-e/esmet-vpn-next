@@ -15,10 +15,24 @@ import { TriangleAlert } from 'lucide-react';
 interface Props {
   className?: string;
   trigger: React.ReactNode;
+  description: string;
+  onConfirm?: () => Promise<void> | void;
 }
 
-export const AlertDialog: React.FC<Props> = ({ trigger }) => {
+export const AlertDialog: React.FC<Props> = ({ trigger, description, onConfirm }) => {
   const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+
+  const handleConfirm = async () => {
+    try {
+      setLoading(true);
+      if (onConfirm) await onConfirm(); // вызвать переданную функцию
+    } finally {
+      setLoading(false);
+      setOpen(false);
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
@@ -30,15 +44,13 @@ export const AlertDialog: React.FC<Props> = ({ trigger }) => {
               <span>Внимание!</span>
             </div>
           </DialogTitle>
-          <DialogDescription className='text-center'>
-            Вы действительно хотите что-то сделать?
-          </DialogDescription>
+          <DialogDescription className='text-center'>{description}</DialogDescription>
         </DialogHeader>
         <div className='flex items-center justify-center space-x-4'>
-          <Button variant={'outline'} onClick={() => setOpen(false)}>
-            Подтвердить
+          <Button disabled={loading} variant={'outline'} onClick={handleConfirm}>
+            {loading ? 'Удаляем...' : 'Подтвердить'}
           </Button>
-          <Button variant={'outline'} onClick={() => setOpen(false)}>
+          <Button disabled={loading} variant={'outline'} onClick={() => setOpen(false)}>
             Отмена
           </Button>
         </div>

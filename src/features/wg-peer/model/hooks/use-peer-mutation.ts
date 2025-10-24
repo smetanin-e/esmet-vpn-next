@@ -1,11 +1,30 @@
 import { useMutation } from '@tanstack/react-query';
-import { toggleActivatePeer } from '../../actions/toggle-activate-peer';
+import { togglePeerStatusAction } from '../../actions/toggle-activate-peer';
 import { queryClient } from '@/shared/lib';
 import toast from 'react-hot-toast';
+import { createPeerAction } from '../../actions/create-peer';
+import { deletePeerAction } from '../../actions/delete-peer';
 
 export const usePeerMutations = () => {
-  const toggleStatus = useMutation({
-    mutationFn: toggleActivatePeer,
+  const createPeer = useMutation({
+    mutationFn: createPeerAction,
+    onSuccess: async (res) => {
+      if (res.success) {
+        await queryClient.invalidateQueries({ queryKey: ['peers'] });
+        toast.success('VPN успешно создан');
+      } else {
+        toast.error(res.message || 'Ошибка при создании конфигурации VPN');
+      }
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : 'Не удалось создать конфигурацию VPN ❌',
+      );
+    },
+  });
+
+  const togglePeerStatus = useMutation({
+    mutationFn: togglePeerStatusAction,
     onSuccess: async (res) => {
       if (res.success) {
         await queryClient.invalidateQueries({ queryKey: ['peers'] });
@@ -21,10 +40,32 @@ export const usePeerMutations = () => {
     },
   });
 
+  const deletePeer = useMutation({
+    mutationFn: deletePeerAction,
+    onSuccess: async (res) => {
+      if (res.success) {
+        await queryClient.invalidateQueries({ queryKey: ['peers'] });
+        toast.success('VPN успешно удален');
+      } else {
+        toast.error(res.message || 'Ошибка при удалении конфигурации VPN');
+      }
+    },
+    onError: (error) => {
+      toast.error(
+        error instanceof Error ? error.message : 'Не удалось удалить конфигурацию VPN ❌',
+      );
+    },
+  });
+
   return {
-    toggleStatus: {
-      mutateAsync: toggleStatus.mutateAsync,
-      isLoading: toggleStatus.isPending,
+    togglePeerStatus: {
+      mutateAsync: togglePeerStatus.mutateAsync,
+      isLoading: togglePeerStatus.isPending,
+    },
+    createPeer,
+    deletePeer: {
+      isLoading: deletePeer.isPending,
+      mutateAsync: deletePeer.mutateAsync,
     },
   };
 };

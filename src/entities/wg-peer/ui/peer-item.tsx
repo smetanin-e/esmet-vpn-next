@@ -1,11 +1,13 @@
-import { AlertDialog, WgLogo } from '@/shared/components';
+import { WgLogo } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
-import { Download, QrCode, Trash2 } from 'lucide-react';
+import { Download, QrCode } from 'lucide-react';
 import React from 'react';
 import { PeerQueryType } from '../model/types';
-import { ChangePeerStatus } from './change-peer-status';
+import { ChangePeerStatus } from '../../../features/wg-peer/ui/change-peer-status';
 import { cn } from '@/shared/lib';
 import { WgPeerStatus } from '@prisma/client';
+import { DeletePeer } from '@/features/wg-peer/ui/delete-peer';
+import { downloadConfig } from '@/features/wg-peer/lib/download-config';
 
 interface Props {
   className?: string;
@@ -39,7 +41,11 @@ export const PeerItem: React.FC<Props> = ({ peer }) => {
           <div className='flex items-center justify-end gap-4'>
             <ChangePeerStatus id={peer.id} status={peer.status} userId={peer.user.id} />
             <div>
-              <Button size={'icon'} variant='outline'>
+              <Button
+                size={'icon'}
+                variant='outline'
+                onClick={() => downloadConfig(peer.id, peer.peerName)}
+              >
                 <Download className='w-4 h-4' />
               </Button>
             </div>
@@ -50,19 +56,7 @@ export const PeerItem: React.FC<Props> = ({ peer }) => {
               </Button>
             </div>
 
-            <div>
-              <AlertDialog
-                trigger={
-                  <Button
-                    size={'icon'}
-                    variant='outline'
-                    className='text-red-400 hover:text-red-300'
-                  >
-                    <Trash2 className='w-4 h-4' />
-                  </Button>
-                }
-              />
-            </div>
+            <DeletePeer peerId={peer.id} />
           </div>
         </div>
       </div>

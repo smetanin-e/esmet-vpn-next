@@ -4,9 +4,14 @@ import { updateUserDetails } from '@/entities/user/model/update-user-details';
 import { userRepository } from '@/entities/user/repository/user-repository';
 import { peerRepository } from '@/entities/wg-peer/repository/peer-repository';
 
-export async function createPeer(name: string, userId: number) {
+type CreatePeerData = {
+  name: string;
+  userId: number;
+};
+
+export async function createPeerAction(data: CreatePeerData) {
   try {
-    const user = await userRepository.findUserById(userId);
+    const user = await userRepository.findUserById(data.userId);
     if (!user || !user.status) {
       return { success: false, message: 'Пользователь не найден или заблокирован' };
     }
@@ -23,7 +28,7 @@ export async function createPeer(name: string, userId: number) {
     }
 
     // Создаём пира через wg-rest-api
-    const peerData = await peerRepository.createPeerWgServer(name);
+    const peerData = await peerRepository.createPeerWgServer(data.name);
     if (!peerData) {
       return {
         success: false,
@@ -54,7 +59,14 @@ export async function createPeer(name: string, userId: number) {
     }
 
     //Сохраняем в БД
-    await peerRepository.createPeerDb(userId, name, peerData.id, publicKey, privateKey, address);
+    await peerRepository.createPeerDb(
+      data.userId,
+      data.name,
+      peerData.id,
+      publicKey,
+      privateKey,
+      address,
+    );
 
     await updateUserDetails(user.id);
 

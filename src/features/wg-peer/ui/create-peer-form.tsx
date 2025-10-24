@@ -1,15 +1,11 @@
 'use client';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-
 import { zodResolver } from '@hookform/resolvers/zod';
-
 import { createPeerSchema, CreatePeerType } from '../model/schemas/create-peer-schema';
-import { createPeer } from '../actions/create-peer';
-
 import { Button } from '@/shared/components/ui';
 import { FormInput } from '@/shared/components/form';
+import { usePeerMutations } from '../model/hooks/use-peer-mutation';
 
 interface Props {
   className?: string;
@@ -18,25 +14,17 @@ interface Props {
 }
 
 export const CreatePeerForm: React.FC<Props> = ({ setOpen, userId }) => {
+  const { createPeer } = usePeerMutations();
   const form = useForm<CreatePeerType>({
     resolver: zodResolver(createPeerSchema),
   });
 
   const onSubmit = async (data: CreatePeerType) => {
     try {
-      const res = await createPeer(data.name, userId);
-      if (!res.success) {
-        throw new Error(res.message);
-      }
+      await createPeer.mutateAsync({ name: data.name, userId });
       setOpen(false);
-      toast.success('Файл конфигурации успешно создан', { icon: '✅' });
     } catch (error) {
-      if (error instanceof Error) {
-        console.log('Error [CREATE_PEER_FORM]', error);
-        return toast.error(
-          error instanceof Error ? error.message : 'Не удалось создать аккаунт ❌',
-        );
-      }
+      console.log('Error [CREATE_PEER_FORM]', error);
     }
   };
   return (
