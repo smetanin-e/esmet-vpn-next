@@ -5,7 +5,7 @@ import { Badge, Card, CardContent } from '@/shared/components/ui';
 import { Peers } from '@/widgets/peers/ui';
 import { redirect } from 'next/navigation';
 import { getUserSession } from '@/features/user/actions/get-user-session';
-import { EmptyData } from '@/shared/components';
+import { CardLabel, EmptyData } from '@/shared/components';
 import { cn } from '@/shared/lib';
 
 export default async function DashboardPage() {
@@ -31,9 +31,7 @@ export default async function DashboardPage() {
             <Card
               className={cn('bg-slate-800/50 border-blue-600 backdrop-blur-sm relative max-w-full')}
             >
-              <Badge className='absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white'>
-                Моя подписка
-              </Badge>
+              <CardLabel text='Моя подписка' />
               <CardContent>
                 <EmptyData text='Подписка отсутствует' />
               </CardContent>
@@ -42,11 +40,7 @@ export default async function DashboardPage() {
 
           <Peers
             className=' md:mb-0 md:col-start-2 md:row-span-2'
-            label={
-              <Badge className='absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white'>
-                Мои конфигурации
-              </Badge>
-            }
+            label={<CardLabel text='Мои конфигурации' />}
           />
           <Transactions className=' md:col-start-1 md:row-start-2' />
         </div>

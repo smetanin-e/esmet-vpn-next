@@ -2,12 +2,13 @@
 import React from 'react';
 
 import { cn } from '@/shared/lib/utils';
-import { Card, CardContent, CardHeader, CardTitle, Input } from '@/shared/components/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
 import { PeerItem } from '@/entities/wg-peer/ui';
-import { CleareButton, PeersQuantity, ShowMore } from '@/shared/components';
+import { LoadingBounce, PeersQuantity, ShowMore } from '@/shared/components';
 import { CreatePeerModal } from '@/features/wg-peer/ui/create-peer-modal';
 import { useGetPeers } from '@/entities/wg-peer/api/use-get-peers';
 import { UserRole } from '@prisma/client';
+import { SearchPeer } from '@/entities/wg-peer/ui/search-peer';
 
 interface Props {
   className?: string;
@@ -27,9 +28,6 @@ export const Peers: React.FC<Props> = ({ className, label, userRole }) => {
       setSearchValue('');
     };
   }, []);
-  if (status === 'pending') {
-    return <div className='p-4'>Загрузка пиров...</div>; //TODO ИСПРАВИТЬ ВЕРСТКУ И ОТОБРАЖЕНИЕ ЗАГРУЗКИ
-  }
 
   if (status === 'error') {
     return (
@@ -43,48 +41,37 @@ export const Peers: React.FC<Props> = ({ className, label, userRole }) => {
     //TODO Сделать чтобы верстка не прыгала при загрузке данных
     <Card
       className={cn(
-        'bg-slate-800/50 border-blue-600 backdrop-blur-sm relative  max-w-full',
+        'bg-slate-800/50 border-blue-600 backdrop-blur-sm relative  max-w-full min-h-80',
         className,
       )}
     >
       {label}
-      {/* {loading ? (
+      {status === 'pending' ? (
         <LoadingBounce />
-      ) : ( */}
-      <>
-        <CardHeader className='mb-0 pb-0'>
-          <CardTitle>Конфигурация WireGuard</CardTitle>
-          <div className='flex items-center justify-between space-x-6 text-sm'>
-            <div className='flex space-x-6'>
-              <PeersQuantity peers={peers} />
-            </div>
-            {userRole && (
-              <div className='w-xl relative'>
-                <Input
-                  placeholder='Поиск по логину или имени клиента'
-                  className=''
-                  type='text'
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                />
-                {searchValue && <CleareButton onClick={() => setSearchValue('')} />}
+      ) : (
+        <>
+          <CardHeader className='mb-0 pb-0'>
+            <CardTitle>Конфигурация WireGuard</CardTitle>
+            <div className='flex items-center justify-between space-x-6 text-sm'>
+              <div className='flex space-x-6'>
+                <PeersQuantity peers={peers} />
               </div>
+              {userRole && <SearchPeer searchValue={searchValue} setSearchValue={setSearchValue} />}
+
+              <CreatePeerModal />
+            </div>
+          </CardHeader>
+          <CardContent className='space-y-2 p-1'>
+            {peers.map((peer) => (
+              <PeerItem key={peer.id} peer={peer} />
+            ))}
+
+            {hasNextPage && (
+              <ShowMore onClick={() => fetchNextPage()} disabled={isFetchingNextPage} />
             )}
-
-            <CreatePeerModal />
-          </div>
-        </CardHeader>
-        <CardContent className='space-y-2 p-1 md:h-[550px] overflow-y-scroll'>
-          {peers.map((peer) => (
-            <PeerItem key={peer.id} peer={peer} />
-          ))}
-
-          {hasNextPage && (
-            <ShowMore onClick={() => fetchNextPage()} disabled={isFetchingNextPage} />
-          )}
-        </CardContent>
-      </>
-      {/* )} */}
+          </CardContent>
+        </>
+      )}
     </Card>
   );
 };

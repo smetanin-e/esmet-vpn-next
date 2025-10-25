@@ -1,14 +1,7 @@
 import React from 'react';
-import {
-  Badge,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/shared/components/ui';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui';
 import { CircleDollarSign, CreditCard } from 'lucide-react';
-import { EmptyData, ShowMore } from '@/shared/components';
+import { CardLabel, ShowMore } from '@/shared/components';
 
 import { cn } from '@/shared/lib/utils';
 import { TransactionItem } from '@/entities/transaction/ui';
@@ -22,9 +15,8 @@ export const Transactions: React.FC<Props> = ({ className }) => {
     <Card
       className={cn('bg-slate-800/50 border-slate-700 backdrop-blur-sm pb-1 relative', className)}
     >
-      <Badge className='absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white'>
-        Tранзакции
-      </Badge>
+      <CardLabel text='Tранзакции' />
+
       <CardHeader>
         <CardTitle className='text-white'>Транзакции</CardTitle>
         <CardDescription className='text-slate-300'>

@@ -13,6 +13,7 @@ import { Laptop, Monitor, Smartphone } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
 import { UserSubscription } from '@/entities/subscription/model/types';
 import { calculatePrice } from '@/shared/lib/calculate-price';
+import { CardLabel } from '@/shared/components';
 
 interface Props {
   className?: string;
@@ -31,9 +32,8 @@ export const ClientSubscriptionCard: React.FC<Props> = ({ className, subscriptio
         className,
       )}
     >
-      <Badge className='absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white'>
-        Моя подписка
-      </Badge>
+      <CardLabel text='Моя подписка' />
+
       <CardHeader>
         <CardTitle className=' flex items-center justify-between'>
           <span className='text-lg'>{subscription.name}</span>

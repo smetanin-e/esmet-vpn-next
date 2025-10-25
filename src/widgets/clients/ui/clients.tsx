@@ -7,6 +7,7 @@ import { cn } from '@/shared/lib/utils';
 import { Plus } from 'lucide-react';
 import { useGetUsers } from '@/entities/user/api/use-get-users';
 import { AuthModal } from '@/features/auth-modal/ui/auth-modal';
+import { CardLabel } from '@/shared/components';
 
 interface Props {
   className?: string;
@@ -21,9 +22,7 @@ export const Clients: React.FC<Props> = ({ className }) => {
         className,
       )}
     >
-      <Badge className='absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white'>
-        Клиенты
-      </Badge>
+      <CardLabel text='Клиенты' />
       <CardHeader className='mb-0 pb-0 flex items-center justify-between space-x-2 text-sm'>
         <CardTitle>Мои клиенты</CardTitle>
 

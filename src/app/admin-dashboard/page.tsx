@@ -7,6 +7,7 @@ import { Peers } from '@/widgets/peers/ui';
 import { redirect } from 'next/navigation';
 import { UserRole } from '@prisma/client';
 import { getUserSession } from '@/features/user/actions/get-user-session';
+import { CardLabel } from '@/shared/components';
 
 export default async function AdminDashboardPage() {
   const user = await getUserSession();
@@ -24,14 +25,7 @@ export default async function AdminDashboardPage() {
             <Transactions />
           </div>
 
-          <Peers
-            userRole={user.role}
-            label={
-              <Badge className='absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-600 text-white'>
-                Все конфигурации
-              </Badge>
-            }
-          />
+          <Peers userRole={user.role} label={<CardLabel text='Все конфигурации' />} />
         </div>
       </div>
     </div>

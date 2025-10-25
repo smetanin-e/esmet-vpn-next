@@ -1,6 +1,7 @@
 import z from 'zod';
-import { loginSchema } from '../../../auth/model/schemas/login-schema';
+
 import { passwordSchema } from '@/shared/lib/validation';
+import { loginSchema } from '@/features/auth/model/schemas/login-schema';
 
 const phoneRegex = /^\+7\d{3}\d{3}\d{2}\d{2}$/;
 

@@ -1,12 +1,12 @@
 import { WgLogo } from '@/shared/components';
 import React from 'react';
 import { PeerQueryType } from '../model/types';
-import { ChangePeerStatus } from '../../../features/wg-peer/ui/change-peer-status';
 import { cn } from '@/shared/lib';
 import { WgPeerStatus } from '@prisma/client';
 import { DeletePeer } from '@/features/wg-peer/ui/delete-peer';
 import { Qr } from './qr';
 import { DownloadConf } from './download-conf';
+import { ChangePeerStatus } from '@/features/wg-peer/ui/change-peer-status';
 
 interface Props {
   className?: string;

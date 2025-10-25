@@ -1,10 +1,10 @@
 'use server';
 import { UserRole } from '@prisma/client';
 
-import { getUserSession } from './get-user-session';
 import { RegisterUserType } from '../model/schemas/register-schema';
 import { userRepository } from '@/entities/user/repository/user-repository';
 import { subscriptionRepository } from '@/entities/subscription/repository/subscription-repository';
+import { getUserSession } from '@/features/user/actions/get-user-session';
 
 export const registerUser = async (formData: RegisterUserType) => {
   try {

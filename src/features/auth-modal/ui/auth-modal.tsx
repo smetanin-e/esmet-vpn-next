@@ -10,7 +10,7 @@ import {
 } from '@/shared/components/ui';
 
 import { LoginForm } from '../../auth/ui/login-form';
-import { RegisterForm } from '../../user/ui/register-form';
+import { RegisterForm } from '../../client/ui/register-form';
 
 interface Props {
   className?: string;

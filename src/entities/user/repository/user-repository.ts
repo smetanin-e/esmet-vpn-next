@@ -1,4 +1,4 @@
-import { RegisterUserType } from '@/features/user/model/schemas/register-schema';
+import { RegisterUserType } from '@/features/client/model/schemas/register-schema';
 import { prisma } from '@/shared/lib/prisma';
 import { generateSalt, hashPassword } from '@/shared/lib/auth/password-utils';
 import { UserDTO } from '../model/types';

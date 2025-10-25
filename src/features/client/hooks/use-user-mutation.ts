@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
-import { registerUser } from '../../actions/register-user';
+
 import { queryClient } from '@/shared/lib';
+import { registerUser } from '../actions/register-user';
 
 export const useUserMutations = () => {
   const registerMutation = useMutation({
