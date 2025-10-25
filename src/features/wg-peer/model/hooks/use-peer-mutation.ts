@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { togglePeerStatusAction } from '../../actions/toggle-activate-peer';
+import { togglePeerStatusAction } from '../../actions/toggle-status-peer';
 import { queryClient } from '@/shared/lib';
 import toast from 'react-hot-toast';
 import { createPeerAction } from '../../actions/create-peer';

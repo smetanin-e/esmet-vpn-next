@@ -1,11 +1,11 @@
-import { PeerQueryType } from '@/entities/wg-peer/model/types';
+import { PeerDTO } from '@/entities/wg-peer/model/types';
 import { WgPeerStatus } from '@prisma/client';
 import { ShieldCheck, ShieldMinus } from 'lucide-react';
 import React from 'react';
 
 interface Props {
   className?: string;
-  peers: PeerQueryType[] | null;
+  peers: PeerDTO[] | null;
 }
 
 export const PeersQuantity: React.FC<Props> = ({ peers }) => {

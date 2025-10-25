@@ -1,9 +1,10 @@
 import React from 'react';
 import { Send, Trash2 } from 'lucide-react';
 import { AlertDialog, PeersQuantity } from '@/shared/components';
-import { Button, Switch } from '@/shared/components/ui';
+import { Button } from '@/shared/components/ui';
 import { UserDTO } from '../model/types';
 import Link from 'next/link';
+import { ChangeUserStatus } from '@/features/client/ui/change-user-status';
 
 interface Props {
   className?: string;
@@ -34,13 +35,11 @@ export const ClientItem: React.FC<Props> = ({ user }) => {
               <PeersQuantity peers={user.peers} />
             </div>
 
-            <Switch
-              checked={user.status}
-              className='data-[state=checked]:bg-success data-[state=unchecked]:bg-gray-400'
-            />
+            <ChangeUserStatus userId={user.id} status={user.status} />
 
             <div className='flex items-center gap-4'>
               <AlertDialog
+                description='!!!'
                 trigger={
                   <Button
                     size={'icon'}

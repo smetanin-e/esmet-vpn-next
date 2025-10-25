@@ -21,6 +21,7 @@ export const userRepository = {
         balance: true,
         subsEnd: true,
         telegram: true,
+
         subscription: {
           select: { name: true, dailyPrice: true, maxPeers: true, description: true, active: true },
         },
@@ -82,6 +83,9 @@ export const userRepository = {
           orderBy: { createdAt: 'desc' },
         },
       },
+      orderBy: {
+        lastName: 'asc',
+      },
     });
   },
 
@@ -89,6 +93,13 @@ export const userRepository = {
     return prisma.user.update({
       where: { id: userId },
       data,
+    });
+  },
+
+  async toggleUserStatus(userId: number, status: boolean) {
+    return await prisma.user.update({
+      where: { id: userId },
+      data: { status },
     });
   },
 };

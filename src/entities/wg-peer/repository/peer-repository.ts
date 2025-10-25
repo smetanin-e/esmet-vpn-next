@@ -14,7 +14,7 @@ export const peerRepository = {
         peerName: true,
         status: true,
         user: {
-          select: { id: true, login: true, firstName: true, lastName: true },
+          select: { login: true, firstName: true, lastName: true },
         },
       },
       orderBy: { createdAt: 'desc' },
@@ -42,7 +42,7 @@ export const peerRepository = {
         peerName: true,
         status: true,
         user: {
-          select: { login: true, firstName: true, lastName: true },
+          select: { id: true, login: true, firstName: true, lastName: true },
         },
       },
       orderBy: { createdAt: 'desc' },
@@ -75,8 +75,15 @@ export const peerRepository = {
 
   // Поиск пира по id
   async findPeerById(peerId: number) {
-    return prisma.wireguardPeer.findUnique({
+    return prisma.wireguardPeer.findFirst({
       where: { id: peerId },
+    });
+  },
+
+  // Поиск пира по userId
+  async findPeersByUserId(userId: number) {
+    return prisma.wireguardPeer.findMany({
+      where: { userId },
     });
   },
 
@@ -87,6 +94,22 @@ export const peerRepository = {
       data: {
         status,
       },
+    });
+  },
+
+  //отключение всех пиров при деактивации пользователя
+  async deactivatePeersByUserId(userId: number) {
+    return await prisma.wireguardPeer.updateMany({
+      where: { userId },
+      data: { status: WgPeerStatus.INACTIVE },
+    });
+  },
+
+  //активация пиров при активации пользователя пользователя
+  async activatePeersByUserId(userId: number) {
+    return await prisma.wireguardPeer.updateMany({
+      where: { userId, isEnabled: true },
+      data: { status: WgPeerStatus.ACTIVE },
     });
   },
 
@@ -145,18 +168,6 @@ export const peerRepository = {
       return { success: false, message: 'Ошибка удаления пира' };
     }
   },
-
-  //   //скачиваем файл .conf
-  //   async getConfigBlob(peerId: number) {
-  //     const res = await peerApi.getConfig(peerId);
-  //     return res.data;
-  //   },
-
-  //   //получаем ссылку на qr-code
-  //   async getQrObjectUrl(peerId: number) {
-  //     const res = await peerApi.getQr(peerId);
-  //     return URL.createObjectURL(res.data);
-  //   },
 
   //добавляем пир из wg-rest-api в базу данных
   async createPeerDb(

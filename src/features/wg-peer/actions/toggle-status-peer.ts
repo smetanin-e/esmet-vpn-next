@@ -11,7 +11,7 @@ type TogglePeerData = {
 export async function togglePeerStatusAction(data: TogglePeerData) {
   try {
     const user = await userRepository.findUserById(data.userId);
-    if (!user || !user.status) {
+    if (!user || user.status === false) {
       return { success: false, message: 'Пользователь не найден или заблокирован' };
     }
 
@@ -30,7 +30,7 @@ export async function togglePeerStatusAction(data: TogglePeerData) {
 
     return { success: true };
   } catch (error) {
-    console.error('[DEACTIVATE_PEER] Server error', error);
-    return { success: false, message: 'Ошибка деактивации пира' };
+    console.error('[TOGGLE_STATUS_PEER] Server error', error);
+    return { success: false, message: 'Ошибка изменения статуса' };
   }
 }

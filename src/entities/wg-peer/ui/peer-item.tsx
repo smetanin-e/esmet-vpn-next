@@ -26,7 +26,10 @@ export const PeerItem: React.FC<Props> = ({ peer }) => {
         )}
       >
         {peer.user && (
-          <p className='text-right text-sm mb-1'>{`${peer.user.lastName} ${peer.user.firstName}`}</p>
+          <p
+            onClick={() => alert(peer.user.id)}
+            className='text-right text-sm mb-1'
+          >{`${peer.user.lastName} ${peer.user.firstName}`}</p>
         )}
         <div className='grid grid-cols-[auto_1fr] items-center space-x-6'>
           <div className='flex flex-col space-y-2'>
