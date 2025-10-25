@@ -22,8 +22,10 @@ export async function togglePeerStatusAction(data: TogglePeerData) {
 
     if (peer.status === WgPeerStatus.ACTIVE) {
       await peerRepository.deactivatePeer(data.peerId);
+      await peerRepository.updateLabelPeerStatus(data.peerId, false);
     } else {
       await peerRepository.activatePeer(data.peerId);
+      await peerRepository.updateLabelPeerStatus(data.peerId, true);
     }
 
     return { success: true };

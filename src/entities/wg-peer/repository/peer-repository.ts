@@ -1,7 +1,8 @@
 import { WireGuardPeerResponse } from '@/features/wg-peer/model/types';
 import { prisma } from '@/shared/lib/prisma';
 import { WgPeerStatus } from '@prisma/client';
-import axios from 'axios';
+import { peerApi } from '../api/peer.api';
+import { normalizeWgConfig } from '../lib/normalize-config';
 
 export const peerRepository = {
   //Получаем пиры из БД по userId
@@ -53,12 +54,7 @@ export const peerRepository = {
   //Создаём пира через wg-rest-api
   async createPeerWgServer(name: string): Promise<WireGuardPeerResponse | null> {
     try {
-      const res = await axios.post(
-        `${process.env.WG_API_URL}/api/clients`,
-        { name },
-        { headers: { Authorization: `Bearer ${process.env.WG_API_TOKEN}` } },
-      );
-
+      const res = await peerApi.create(name);
       return res.data;
     } catch (error) {
       console.error('[createPeerWgServer] Server error', error);
@@ -69,20 +65,8 @@ export const peerRepository = {
   // Получаем конфиг напрямую из wg-rest-api
   async getWgServerPeerConfig(peerId: number): Promise<string | null> {
     try {
-      const res = await axios.get(`${process.env.WG_API_URL}/api/clients/${peerId}?format=conf`, {
-        headers: { Authorization: `Bearer ${process.env.WG_API_TOKEN}` },
-        responseType: 'text',
-      });
-      let config = res.data;
-      // Исправляем DNS и PersistentKeepalive если не установлены
-      if (!config.includes('DNS')) {
-        config = config.replace('[Interface]', `[Interface]\nDNS = 1.1.1.1`);
-      }
-      if (!config.includes('PersistentKeepalive')) {
-        config = config.replace('Endpoint =', 'PersistentKeepalive = 25\nEndpoint =');
-      }
-
-      return config;
+      const res = await peerApi.get(peerId);
+      return normalizeWgConfig(res.data);
     } catch (error) {
       console.error('[getWgServerPeerConfig] Server error', error);
       return null;
@@ -106,17 +90,23 @@ export const peerRepository = {
     });
   },
 
+  //обновляем флаг последнего статуса пира (для того чтобы при активации пользователя, включить ему только те пиры, которые были активны до блокировки)
+  async updateLabelPeerStatus(peerId: number, value: boolean) {
+    return prisma.wireguardPeer.update({
+      where: { id: peerId },
+      data: {
+        isEnabled: value,
+      },
+    });
+  },
   //Деактивируем пир
   async deactivatePeer(peerId: number) {
     try {
       // Деактивируем на сервере WireGuard через wg-rest-api
-      await axios.patch(
-        `${process.env.WG_API_URL}/api/clients/${peerId}`,
-        { enable: false },
-        { headers: { Authorization: `Bearer ${process.env.WG_API_TOKEN}` } },
-      );
-
+      await peerApi.deactivate(peerId);
+      //обновляем статус пира в БД
       await this.updatePeerStatus(peerId, WgPeerStatus.INACTIVE);
+
       return { success: true };
     } catch (error) {
       console.error('[deactivatePeer] Server error', error);
@@ -128,13 +118,10 @@ export const peerRepository = {
   async activatePeer(peerId: number) {
     try {
       // Активируем на сервере WireGuard через wg-rest-api
-      await axios.patch(
-        `${process.env.WG_API_URL}/api/clients/${peerId}`,
-        { enable: true },
-        { headers: { Authorization: `Bearer ${process.env.WG_API_TOKEN}` } },
-      );
-
+      await peerApi.activate(peerId);
+      //обновляем статус пира в БД
       await this.updatePeerStatus(peerId, WgPeerStatus.ACTIVE);
+
       return { success: true };
     } catch (error) {
       console.error('[deactivatePeer] Server error', error);
@@ -146,12 +133,7 @@ export const peerRepository = {
   async deletePeer(peerId: number) {
     try {
       // Удаляем на сервере WireGuard через wg-rest-api
-      await axios.delete(
-        `${process.env.WG_API_URL}/api/clients/${peerId}`,
-
-        { headers: { Authorization: `Bearer ${process.env.WG_API_TOKEN}` } },
-      );
-
+      await peerApi.delete(peerId);
       //Удаляем из БД
       await prisma.wireguardPeer.delete({
         where: { id: peerId },
@@ -164,6 +146,18 @@ export const peerRepository = {
     }
   },
 
+  //   //скачиваем файл .conf
+  //   async getConfigBlob(peerId: number) {
+  //     const res = await peerApi.getConfig(peerId);
+  //     return res.data;
+  //   },
+
+  //   //получаем ссылку на qr-code
+  //   async getQrObjectUrl(peerId: number) {
+  //     const res = await peerApi.getQr(peerId);
+  //     return URL.createObjectURL(res.data);
+  //   },
+
   //добавляем пир из wg-rest-api в базу данных
   async createPeerDb(
     userId: number,
@@ -173,7 +167,7 @@ export const peerRepository = {
     privateKey: string,
     address: string,
   ) {
-    return await prisma.wireguardPeer.create({
+    return prisma.wireguardPeer.create({
       data: {
         userId,
         peerName: name,

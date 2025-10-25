@@ -1,11 +1,8 @@
-import axios from 'axios';
+import { peerApi } from '@/entities/wg-peer/api/peer.api';
 
 export const downloadConfig = async (peerId: number, peerName: string) => {
   try {
-    const res = await axios.get(`/api/peer/${peerId}/config`, {
-      responseType: 'blob', // важно, чтобы axios воспринимал ответ как файл
-      withCredentials: true, // чтобы cookie для авторизации передались
-    });
+    const res = await peerApi.getConfig(peerId);
 
     // создаём ссылку и скачиваем файл
     const url = window.URL.createObjectURL(res.data);
@@ -14,8 +11,10 @@ export const downloadConfig = async (peerId: number, peerName: string) => {
     a.download = `${peerName}.conf`;
     a.click();
     window.URL.revokeObjectURL(url);
+
+    return { success: true };
   } catch (error) {
-    console.error('Ошибка при скачивании конфига:', error);
-    alert('Не удалось скачать конфиг');
+    console.error('[downloadConfig]', error);
+    return { success: false, message: 'Ошибка при скачивании файла конфигурации' };
   }
 };

@@ -1,13 +1,12 @@
 import { WgLogo } from '@/shared/components';
-import { Button } from '@/shared/components/ui';
-import { Download, QrCode } from 'lucide-react';
 import React from 'react';
 import { PeerQueryType } from '../model/types';
 import { ChangePeerStatus } from '../../../features/wg-peer/ui/change-peer-status';
 import { cn } from '@/shared/lib';
 import { WgPeerStatus } from '@prisma/client';
 import { DeletePeer } from '@/features/wg-peer/ui/delete-peer';
-import { downloadConfig } from '@/features/wg-peer/lib/download-config';
+import { Qr } from './qr';
+import { DownloadConf } from './download-conf';
 
 interface Props {
   className?: string;
@@ -41,19 +40,10 @@ export const PeerItem: React.FC<Props> = ({ peer }) => {
           <div className='flex items-center justify-end gap-4'>
             <ChangePeerStatus id={peer.id} status={peer.status} userId={peer.user.id} />
             <div>
-              <Button
-                size={'icon'}
-                variant='outline'
-                onClick={() => downloadConfig(peer.id, peer.peerName)}
-              >
-                <Download className='w-4 h-4' />
-              </Button>
+              <DownloadConf peerId={peer.id} peerName={peer.peerName} />
             </div>
             <div>
-              {' '}
-              <Button size={'icon'} variant='outline' onClick={() => alert(peer.id)}>
-                <QrCode className='w-4 h-4' />
-              </Button>
+              <Qr peerId={peer.id} peerName={peer.peerName} />
             </div>
 
             <DeletePeer peerId={peer.id} />
