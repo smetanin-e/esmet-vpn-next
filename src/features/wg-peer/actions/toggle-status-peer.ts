@@ -1,5 +1,6 @@
 'use server';
 import { userRepository } from '@/entities/user/repository/user-repository';
+import { peerApi } from '@/entities/wg-peer/api/peer.api';
 import { peerRepository } from '@/entities/wg-peer/repository/peer-repository';
 import { WgPeerStatus } from '@prisma/client';
 

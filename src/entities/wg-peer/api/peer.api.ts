@@ -14,8 +14,20 @@ export const peerApi = {
     return wgInstance.patch(`/api/clients/${peerId}`, { enable: false });
   },
 
+  async deactivateMany(peerIds: number[]) {
+    return Promise.all(
+      peerIds.map((peerId) => wgInstance.patch(`/api/clients/${peerId}`, { enable: false })),
+    );
+  },
+
   async activate(peerId: number) {
     return wgInstance.patch(`/api/clients/${peerId}`, { enable: true });
+  },
+
+  async activateMany(peerIds: number[]) {
+    return Promise.all(
+      peerIds.map((peerId) => wgInstance.patch(`/api/clients/${peerId}`, { enable: true })),
+    );
   },
 
   async delete(peerId: number) {
@@ -23,10 +35,7 @@ export const peerApi = {
   },
 
   async deleteMany(peerIds: number[]) {
-    for (const peer of peerIds) {
-      wgInstance.delete(`/api/clients/${peer}`);
-    }
-    return;
+    return Promise.all(peerIds.map((peerId) => wgInstance.delete(`/api/clients/${peerId}`)));
   },
 
   async getConfig(peerId: number) {

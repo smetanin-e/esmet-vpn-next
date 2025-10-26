@@ -51,6 +51,25 @@ export const peerRepository = {
     });
   },
 
+  //Получаем все peerId по id пользователя для комплексного отключения на сервере WG
+  async getPeerIdsByUserId(userId: number) {
+    const peers = await prisma.wireguardPeer.findMany({
+      where: { userId },
+      select: { id: true },
+    });
+
+    return peers.map((p) => p.id);
+  },
+
+  //Получаем активные peerId по id пользователя для комплексного отключения на сервере WG
+  async getEnabledIdsByUserId(userId: number) {
+    const peers = await prisma.wireguardPeer.findMany({
+      where: { userId, isEnabled: true },
+      select: { id: true },
+    });
+    return peers.map((p) => p.id);
+  },
+
   //Создаём пира через wg-rest-api
   async createPeerWgServer(name: string): Promise<WireGuardPeerResponse | null> {
     try {
@@ -99,6 +118,8 @@ export const peerRepository = {
 
   //отключение всех пиров при деактивации пользователя
   async deactivatePeersByUserId(userId: number) {
+    const peerIds = await this.getEnabledIdsByUserId(userId);
+    await peerApi.deactivateMany(peerIds);
     return await prisma.wireguardPeer.updateMany({
       where: { userId },
       data: { status: WgPeerStatus.INACTIVE },
@@ -107,6 +128,8 @@ export const peerRepository = {
 
   //активация пиров при активации пользователя пользователя
   async activatePeersByUserId(userId: number) {
+    const peerIds = await this.getEnabledIdsByUserId(userId);
+    await peerApi.activateMany(peerIds);
     return await prisma.wireguardPeer.updateMany({
       where: { userId, isEnabled: true },
       data: { status: WgPeerStatus.ACTIVE },

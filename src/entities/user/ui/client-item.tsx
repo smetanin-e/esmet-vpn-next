@@ -5,6 +5,7 @@ import { Button } from '@/shared/components/ui';
 import { UserDTO } from '../model/types';
 import Link from 'next/link';
 import { ChangeUserStatus } from '@/features/client/ui/change-user-status';
+import { useGetPeers } from '@/entities/wg-peer/model/hooks/use-get-peers';
 
 interface Props {
   className?: string;
@@ -13,6 +14,9 @@ interface Props {
 //TODO ЕСЛИ НАДО, ДОБАВИТЬ БАЛАНС КАЖДОГО ПОЛЬЗОВАТЕЛЯ
 //!ДОБАВИТЬ СКРОЛ НА СПИСОК ПОЛЬЗОВАТЕЛЕЙ И ПОИСК
 export const ClientItem: React.FC<Props> = ({ user }) => {
+  const { data } = useGetPeers();
+  const peers =
+    data?.pages.flatMap((page) => page.peers).filter((peer) => peer.user.id === user.id) ?? [];
   return (
     <div className='space-y-4'>
       <div className='p-4 bg-slate-900/50 rounded-lg border border-slate-700 hover:border-slate-600 transition-colors'>
@@ -32,7 +36,7 @@ export const ClientItem: React.FC<Props> = ({ user }) => {
               </Button>
             </Link>
             <div className='flex space-x-2'>
-              <PeersQuantity peers={user.peers} />
+              <PeersQuantity peers={peers} />
             </div>
 
             <ChangeUserStatus userId={user.id} status={user.status} />
