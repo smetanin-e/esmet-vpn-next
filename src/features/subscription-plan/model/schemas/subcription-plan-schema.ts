@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const subscriptionSchema = z.object({
+export const subscriptionPlanSchema = z.object({
   name: z.string().min(1, { message: 'Введите название подписки' }),
   description: z.string().min(5, { message: 'Введите описание' }),
   dailyPrice: z.string().regex(/^[0-9][0-9]*$/, {
@@ -10,4 +10,4 @@ export const subscriptionSchema = z.object({
     message: 'Введите корректные данные',
   }),
 });
-export type SubscriptionFormType = z.infer<typeof subscriptionSchema>;
+export type SubscriptionPlanFormType = z.infer<typeof subscriptionPlanSchema>;

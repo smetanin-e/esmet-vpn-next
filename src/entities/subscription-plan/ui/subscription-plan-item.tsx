@@ -1,13 +1,13 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardTitle } from '@/shared/components/ui';
-import { SubscriptionType } from '../model/types';
+import { SubscriptionPlan } from '@prisma/client';
 
 interface Props {
   className?: string;
-  subscription: SubscriptionType;
+  subscription: SubscriptionPlan;
 }
 
-export const SubscriptionItem: React.FC<Props> = ({ subscription }) => {
+export const SubscriptionPlanItem: React.FC<Props> = ({ subscription }) => {
   return (
     <Card className='bg-slate-800/50 border-blue-600 backdrop-blur-sm relative max-w-full px-4 gap-2 '>
       <CardTitle>{subscription.name}</CardTitle>

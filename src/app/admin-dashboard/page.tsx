@@ -1,8 +1,7 @@
 import { Clients } from '@/widgets/clients/ui/clients';
 import { Header } from '@/shared/components/header';
-import { Subscriptions } from '@/widgets/subscriptions/ui/subscriptions';
+import { SubscriptionPlans } from '@/widgets/subscription-plans/ui/subscription-plans';
 import { Transactions } from '@/widgets/transactions/ui/transactions';
-import { Badge } from '@/shared/components/ui';
 import { Peers } from '@/widgets/peers/ui';
 import { redirect } from 'next/navigation';
 import { UserRole } from '@prisma/client';
@@ -19,7 +18,7 @@ export default async function AdminDashboardPage() {
       <div className='container mx-auto py-4 px-2'>
         <Header title='Админ-панель' name={`${user.lastName} ${user.firstName}`} role={user.role} />
         <div className='space-y-8'>
-          <Subscriptions />
+          <SubscriptionPlans />
           <div className=' lg:grid lg:grid-cols-[1fr_370px] lg:gap-6 '>
             <Clients className='mb-8 lg:mb-0' />
             <Transactions />

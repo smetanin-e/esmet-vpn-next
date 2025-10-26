@@ -1,17 +1,19 @@
 'use client';
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui';
-import { SubscriptionItem } from '@/entities/subscription/ui/subscription-item';
-import { SubscriptionModal } from '@/features/subscription/ui/subscription-modal';
-import { useGetSubscriptions } from '@/entities/subscription/api/use-get-subscriptions';
+
+import { SubscriptionModal } from '@/features/subscription-plan/ui/subscription-plan-modal';
+
 import { CardLabel } from '@/shared/components';
+import { useGetSubscriptionPlans } from '@/entities/subscription-plan/api/use-get-subscriptions';
+import { SubscriptionPlanItem } from '@/entities/subscription-plan/ui/subscription-plan-item';
 
 interface Props {
   className?: string;
 }
 
-export const Subscriptions: React.FC<Props> = () => {
-  const { data, isLoading } = useGetSubscriptions();
+export const SubscriptionPlans: React.FC<Props> = () => {
+  const { data, isLoading } = useGetSubscriptionPlans();
   return (
     <Card className='bg-slate-800/50 border-blue-600 backdrop-blur-sm relative  max-w-full'>
       <CardLabel text='Подписки' />
@@ -28,7 +30,7 @@ export const Subscriptions: React.FC<Props> = () => {
             <>
               {' '}
               {data?.map((subscription) => (
-                <SubscriptionItem key={subscription.id} subscription={subscription} />
+                <SubscriptionPlanItem key={subscription.id} subscription={subscription} />
               ))}
             </>
           )}

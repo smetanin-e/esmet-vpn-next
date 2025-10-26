@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { registerUserSchema, RegisterUserType } from '../model/schemas/register-schema';
 import { FormInput } from '@/shared/components/form';
-import { FormSubscriptionSelect } from '@/shared/components/form/form-subscription-select';
+import { FormSubscriptionSelect } from '@/entities/subscription-plan/ui/form-subscription-select';
 import { useUserMutations } from '../model/hooks/use-user-mutation';
 
 interface Props {

@@ -37,7 +37,8 @@ model User {
     transactions Transaction[]
 
     subscriptionId Int?
-    subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+
+    userSubscription UserSubscription[]
 }
 
 model WireguardPeer {
@@ -74,18 +75,26 @@ model Transaction {
     paymentUrl String?
 }
 
-model Subscription {
-    id Int @id @default(autoincrement())
-
-    users User[]
-
+model SubscriptionPlan {
+    id          Int      @id @default(autoincrement())
     name        String
     dailyPrice  Int
     maxPeers    Int
     description String
+    createdAt   DateTime @default(now())
 
-    createdAt DateTime @default(now())
-    active    Boolean  @default(true)
+    userSubscriptions UserSubscription[]
+}
+
+model UserSubscription {
+    id      Int       @id @default(autoincrement())
+    status  Boolean   @default(true)
+    endDate DateTime?
+
+    userId             Int
+    subscriptionPlanId Int
+    user               User             @relation(fields: [userId], references: [id])
+    subscriptionPlan   SubscriptionPlan @relation(fields: [subscriptionPlanId], references: [id])
 }
 
 enum UserRole {

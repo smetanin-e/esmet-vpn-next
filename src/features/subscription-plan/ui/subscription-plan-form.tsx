@@ -1,42 +1,37 @@
 'use client';
 import React from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import toast from 'react-hot-toast';
-import { SubscriptionFormType, subscriptionSchema } from '../model/schemas/subcription-schema';
+import {
+  SubscriptionPlanFormType,
+  subscriptionPlanSchema,
+} from '../model/schemas/subcription-plan-schema';
 import { FormInput, FormTextarea } from '@/shared/components/form';
 import { Button } from '@/shared/components/ui';
-import { addSubscription } from '../actions/add-subscription';
-import { queryClient } from '@/shared/lib';
+import { useSubscriptionPlanMutation } from '../model/hooks/use-subscription-plan-mutation';
 
 interface Props {
   className?: string;
   setOpen: (open: boolean) => void;
 }
 
-export const FormSubscription: React.FC<Props> = ({ setOpen }) => {
-  const form = useForm<SubscriptionFormType>({
-    resolver: zodResolver(subscriptionSchema),
+export const FormSubscriptionPlan: React.FC<Props> = ({ setOpen }) => {
+  const { create } = useSubscriptionPlanMutation();
+  const form = useForm<SubscriptionPlanFormType>({
+    resolver: zodResolver(subscriptionPlanSchema),
     defaultValues: {
       name: '',
       description: '',
       dailyPrice: '',
     },
   });
-  const onSubmit = async (data: SubscriptionFormType) => {
+  const onSubmit = async (data: SubscriptionPlanFormType) => {
     try {
-      const res = await addSubscription(data);
-      if (!res.success) {
-        throw new Error(res.message);
-      }
-      toast.success('Подписка добавлена ✅');
-      queryClient.invalidateQueries({ queryKey: ['subscriptions'] });
+      await create.mutateAsync(data);
       setOpen(false);
     } catch (error) {
       console.log('Error [SUBSCRIPTION_FORM]', error);
-      return toast.error(error instanceof Error ? error.message : 'Не удалось создать подписку ❌');
     }
   };
   return (

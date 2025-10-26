@@ -1,13 +1,13 @@
 import { axiosInstance } from '@/shared/service/instance';
+import { SubscriptionPlan } from '@prisma/client';
 import { useQuery } from '@tanstack/react-query';
-import { SubscriptionType } from '../model/types';
 
-export const useGetSubscriptions = () => {
-  return useQuery<SubscriptionType[]>({
-    queryKey: ['subscriptions'],
+export const useGetSubscriptionPlans = () => {
+  return useQuery<SubscriptionPlan[]>({
+    queryKey: ['subscription-plans'],
     queryFn: async () => {
       return (
-        await axiosInstance.get<SubscriptionType[]>('/subscription', {
+        await axiosInstance.get<SubscriptionPlan[]>('/subscription-plan', {
           headers: {
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_API_READ_KEY}`,
           },

@@ -1,10 +1,16 @@
 'use client';
 import React from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { RequiredSymbol } from '../required-symbol';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui';
-import { ErrorText } from '../error-text';
-import { useGetSubscriptions } from '@/entities/subscription/api/use-get-subscriptions';
+
+import { useGetSubscriptionPlans } from '@/entities/subscription-plan/api/use-get-subscriptions';
+import { ErrorText, RequiredSymbol } from '@/shared/components';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/shared/components/ui';
 
 interface Props {
   className?: string;
@@ -14,7 +20,7 @@ interface Props {
 }
 
 export const FormSubscriptionSelect: React.FC<Props> = ({ name, label, required }) => {
-  const { data } = useGetSubscriptions();
+  const { data } = useGetSubscriptionPlans();
   const {
     control,
     formState: { errors },

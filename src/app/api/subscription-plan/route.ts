@@ -1,4 +1,4 @@
-import { subscriptionRepository } from '@/entities/subscription/repository/subscription-repository';
+import { subscriptionPlanRepository } from '@/entities/subscription-plan/repository/subscription-plan-repository';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -12,8 +12,8 @@ export async function GET(req: NextRequest) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
   try {
-    const subscriptions = await subscriptionRepository.getSubcriptions();
-    return NextResponse.json(subscriptions);
+    const subscriptionPlans = await subscriptionPlanRepository.getPlans();
+    return NextResponse.json(subscriptionPlans);
   } catch (error) {
     console.error('[API_SUBSCRIPTION_GET]', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });

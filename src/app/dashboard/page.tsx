@@ -1,7 +1,7 @@
 import { ClientSubscriptionCard } from '@/widgets/clients/ui/client-subscription-card';
 import { Header } from '@/shared/components/header';
 import { Transactions } from '@/widgets/transactions/ui/transactions';
-import { Badge, Card, CardContent } from '@/shared/components/ui';
+import { Card, CardContent } from '@/shared/components/ui';
 import { Peers } from '@/widgets/peers/ui';
 import { redirect } from 'next/navigation';
 import { getUserSession } from '@/features/user/actions/get-user-session';

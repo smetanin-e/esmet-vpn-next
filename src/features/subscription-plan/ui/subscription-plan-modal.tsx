@@ -10,7 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/shared/components/ui';
-import { FormSubscription } from './subscription-form';
+import { FormSubscriptionPlan } from './subscription-plan-form';
 import { Plus } from 'lucide-react';
 
 interface Props {
@@ -34,7 +34,7 @@ export const SubscriptionModal: React.FC<Props> = () => {
             Добавление нового тарифного плана
           </DialogDescription>
         </DialogHeader>
-        <FormSubscription setOpen={setOpen} />
+        <FormSubscriptionPlan setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );
