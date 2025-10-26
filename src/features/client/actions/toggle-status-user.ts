@@ -1,11 +1,17 @@
 'use server';
 import { userRepository } from '@/entities/user/repository/user-repository';
 import { peerRepository } from '@/entities/wg-peer/repository/peer-repository';
+import { getUserSession } from '@/features/user/actions/get-user-session';
 
 export const toggleUserStatusAction = async (userId: number) => {
   try {
+    const authUser = await getUserSession();
+    if (!authUser || authUser.id === userId) {
+      return { success: false, message: 'Нельзя отключить учетную запись текущего пользователя' };
+    }
     const user = await userRepository.findUserById(userId);
     if (!user) return { success: false, message: 'Пользователь не найден' };
+
     const peers = await peerRepository.findPeersByUserId(userId);
     if (!peers) {
       await userRepository.toggleUserStatus(userId, !user.status);

@@ -11,6 +11,5 @@ export const getUserSession = async () => {
   const user = await userRepository.findUserById(Number(sessionUser.id));
 
   if (!user || !user.status) return null;
-  console.log({ session, user });
   return user;
 };
