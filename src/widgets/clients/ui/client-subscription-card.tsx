@@ -11,18 +11,25 @@ import {
 } from '@/shared/components/ui';
 import { Laptop, Monitor, Smartphone } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
-import { UserSubscription } from '@/entities/subscription/model/types';
 import { calculatePrice } from '@/shared/lib/calculate-price';
 import { CardLabel } from '@/shared/components';
+import { UserSubscriptionDTO } from '@/entities/user-subscription/model/type';
 
 interface Props {
   className?: string;
-  subscription: UserSubscription;
+  subscription: UserSubscriptionDTO;
   balance: number;
 }
 
 export const ClientSubscriptionCard: React.FC<Props> = ({ className, subscription, balance }) => {
-  const prices = calculatePrice(subscription.dailyPrice, subscription.maxPeers);
+  const prices = calculatePrice(
+    subscription.subscriptionPlan.dailyPrice,
+    subscription.subscriptionPlan.maxPeers,
+  );
+
+  const subsEnd = subscription.endDate
+    ? new Date(subscription.endDate).toLocaleDateString('ru-RU')
+    : 'Дата не определена';
 
   console.log(prices);
   return (
@@ -36,9 +43,9 @@ export const ClientSubscriptionCard: React.FC<Props> = ({ className, subscriptio
 
       <CardHeader>
         <CardTitle className=' flex items-center justify-between'>
-          <span className='text-lg'>{subscription.name}</span>
-          <Badge variant={subscription.active ? 'success' : 'destructive'}>
-            {subscription.active ? 'Активна' : 'Отключена'}
+          <span className='text-lg'>{subscription.subscriptionPlan.name}</span>
+          <Badge variant={subscription.status ? 'success' : 'destructive'}>
+            {subscription.status ? 'Активна' : 'Отключена'}
           </Badge>
         </CardTitle>
         <CardDescription className='text-slate-300'>
@@ -47,7 +54,7 @@ export const ClientSubscriptionCard: React.FC<Props> = ({ className, subscriptio
               <Smartphone className='h-4 w-4 text-green-400' />
               <Laptop className='h-4 w-4 text-green-400' />
               <Monitor className='h-4 w-4 text-green-400' />
-              устройств - {subscription.maxPeers}
+              устройств - {subscription.subscriptionPlan.maxPeers}
             </li>
             {prices.map((price, index) => (
               <li className='mt-2' key={index}>{`Активных стройств: ${
@@ -68,8 +75,8 @@ export const ClientSubscriptionCard: React.FC<Props> = ({ className, subscriptio
           </Button>
         </div>
         {/* //TODO ПОСЧИТАТЬ ОСТАТОК ДНЕЙ */}
-        <div className='mt-6  text-center'>Действие подписки</div>
-        <p className=' text-center'>До 26.10.2025</p>
+        {/* <div className='mt-6  text-center'>Действие подписки</div>
+        <p className=' text-center'>До {subsEnd}</p> */}
       </CardContent>
     </Card>
   );

@@ -20,11 +20,11 @@ export default async function DashboardPage() {
           name={`${user.lastName} ${user.firstName}`}
           role={user.role}
         />
-        <div className='space-y-6 md:pt-4 md:grid md:grid-cols-[350px_1fr] md:grid-rows-2 md:gap-x-4 md:gap-y-4 md:w-full md:max-h-180 '>
-          {user.subscription ? (
+        <div className='space-y-6 md:pt-4 md:grid md:grid-cols-[350px_1fr] md:grid-rows-2 md:gap-x-4 md:gap-y-4 md:w-full '>
+          {user.userSubscription ? (
             <ClientSubscriptionCard
               className=' md:mb-0 md:col-start-1 md:row-start-1 '
-              subscription={user.subscription}
+              subscription={user.userSubscription}
               balance={user.balance}
             />
           ) : (

@@ -11,13 +11,18 @@ type TogglePeerData = {
 export async function togglePeerStatusAction(data: TogglePeerData) {
   try {
     const user = await userRepository.findUserById(data.userId);
-    if (!user || user.status === false) {
+    if (!user || !user.status) {
       return { success: false, message: 'Пользователь не найден или заблокирован' };
     }
 
     const peer = await peerRepository.findPeerById(data.peerId);
     if (!peer) {
       return { success: false, message: 'Конфигурация не найдена' };
+    }
+
+    const subscription = user.userSubscription;
+    if (!subscription || !subscription.status) {
+      return { success: false, message: 'Запрет на изменение статуса. Подписка отключена' };
     }
 
     if (peer.status === WgPeerStatus.ACTIVE) {
@@ -27,6 +32,8 @@ export async function togglePeerStatusAction(data: TogglePeerData) {
       await peerRepository.activatePeer(data.peerId);
       await peerRepository.updateLabelPeerStatus(data.peerId, true);
     }
+
+    //await updateUserDetails(user.id);
 
     return { success: true };
   } catch (error) {

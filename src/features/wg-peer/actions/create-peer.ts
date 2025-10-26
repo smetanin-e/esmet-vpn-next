@@ -1,6 +1,4 @@
 'use server';
-
-import { updateUserDetails } from '@/entities/user/model/update-user-details';
 import { userRepository } from '@/entities/user/repository/user-repository';
 import { peerRepository } from '@/entities/wg-peer/repository/peer-repository';
 
@@ -16,7 +14,12 @@ export async function createPeerAction(data: CreatePeerData) {
       return { success: false, message: 'Пользователь не найден или заблокирован' };
     }
 
-    const maxPeers = user.subscription ? user.subscription.maxPeers : 0;
+    const subscription = user.userSubscription;
+    if (!subscription || !subscription.status) {
+      return { success: false, message: 'Подписка отсутствует или отключена' };
+    }
+
+    const maxPeers = subscription.subscriptionPlan ? subscription.subscriptionPlan.maxPeers : 0;
     const peersCount = user.peers ? user.peers.length : 0;
 
     if (peersCount >= maxPeers) {
@@ -68,7 +71,7 @@ export async function createPeerAction(data: CreatePeerData) {
       address,
     );
 
-    await updateUserDetails(user.id);
+    //await updateUserDetails(user.id);
 
     return { success: true };
   } catch (error) {

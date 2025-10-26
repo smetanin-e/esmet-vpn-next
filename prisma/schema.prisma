@@ -25,20 +25,16 @@ model User {
     password  String
     salt      String?
 
-    balance Int       @default(0)
-    subsEnd DateTime?
+    balance Int @default(0)
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     //Связи
 
-    peers        WireguardPeer[]
-    transactions Transaction[]
-
-    subscriptionId Int?
-
-    userSubscription UserSubscription[]
+    peers            WireguardPeer[]
+    transactions     Transaction[]
+    userSubscription UserSubscription?
 }
 
 model WireguardPeer {
@@ -91,7 +87,7 @@ model UserSubscription {
     status  Boolean   @default(true)
     endDate DateTime?
 
-    userId             Int
+    userId             Int              @unique
     subscriptionPlanId Int
     user               User             @relation(fields: [userId], references: [id])
     subscriptionPlan   SubscriptionPlan @relation(fields: [subscriptionPlanId], references: [id])

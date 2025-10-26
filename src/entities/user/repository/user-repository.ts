@@ -2,12 +2,11 @@ import { RegisterUserType } from '@/features/client/model/schemas/register-schem
 import { prisma } from '@/shared/lib/prisma';
 import { generateSalt, hashPassword } from '@/shared/lib/auth/password-utils';
 import { UserDTO } from '../model/types';
-
 export const userRepository = {
   async findUserByLogin(login: string) {
     return prisma.user.findUnique({ where: { login } });
   },
-  //TODO ИСПРАВИТЬ ТАК КАК АВТОРИЗОВАННЫЙ ПОЛЬЗОВАТЕЛЬ ДОЛЖЕН ИМЕТЬ ПОДПИСКИ ПИРЫ И ТРАНЗАКЦИИ
+
   async findUserById(userId: number): Promise<UserDTO | null> {
     const user = await prisma.user.findFirst({
       where: { id: userId },
@@ -19,12 +18,9 @@ export const userRepository = {
         status: true,
         lastName: true,
         balance: true,
-        subsEnd: true,
         telegram: true,
 
-        subscription: {
-          select: { name: true, dailyPrice: true, maxPeers: true, description: true, active: true },
-        },
+        userSubscription: { include: { subscriptionPlan: true } },
         peers: {
           select: { peerName: true, status: true },
           orderBy: { peerName: 'asc' },
@@ -54,7 +50,6 @@ export const userRepository = {
         telegram: data.telegram.startsWith('http')
           ? data.telegram
           : `https://t.me/${data.telegram}`,
-        subscriptionId: Number(data.subscription) || null,
       },
     });
   },
@@ -69,11 +64,8 @@ export const userRepository = {
         status: true,
         lastName: true,
         balance: true,
-        subsEnd: true,
         telegram: true,
-        subscription: {
-          select: { name: true, dailyPrice: true, maxPeers: true, description: true, active: true },
-        },
+        userSubscription: { include: { subscriptionPlan: true } },
         peers: {
           select: { peerName: true, status: true },
           orderBy: { peerName: 'asc' },
@@ -100,6 +92,12 @@ export const userRepository = {
     return await prisma.user.update({
       where: { id: userId },
       data: { status },
+    });
+  },
+
+  async deleteUser(userId: number) {
+    return prisma.user.delete({
+      where: { id: userId },
     });
   },
 };

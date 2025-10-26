@@ -1,28 +1,30 @@
 import { WgPeerStatus } from '@prisma/client';
 import { userRepository } from '../repository/user-repository';
+import { userSubscriptionRepository } from '@/entities/user-subscription/repository/user-subscription-repository';
 
 export const updateUserDetails = async (userId: number) => {
   const user = await userRepository.findUserById(userId);
 
-  if (!user) return;
+  if (!user || !user.userSubscription) return;
 
   const activePeersCount = user.peers
     ? user.peers.filter((peer) => peer.status === WgPeerStatus.ACTIVE).length
     : 0;
   const balance = user.balance;
-  const dailyPrice = user.subscription?.dailyPrice ? user.subscription?.dailyPrice : 0;
+  const userDailyPrice = user.userSubscription.subscriptionPlan.dailyPrice;
+
+  const dailyPrice = userDailyPrice ? userDailyPrice : 0;
   const dailyCost = (dailyPrice as number) * activePeersCount;
 
-  let subsEnd: Date | null = null;
+  let endDate: Date | null = null;
 
   if (dailyCost > 0) {
     const daysLeft = Math.floor(balance / dailyCost);
     if (daysLeft > 0) {
-      const endDate = new Date();
-      endDate.setDate(endDate.getDate() + daysLeft);
-      subsEnd = endDate;
+      const newEndDate = new Date();
+      newEndDate.setDate(newEndDate.getDate() + daysLeft);
+      endDate = newEndDate;
     }
   }
-
-  await userRepository.updateUserById(userId, { subsEnd });
+  await userSubscriptionRepository.updateById(user.userSubscription.id, { endDate: endDate });
 };

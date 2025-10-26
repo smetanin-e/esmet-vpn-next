@@ -7,10 +7,17 @@ import toast from 'react-hot-toast';
 export const useUserMutations = () => {
   const registerMutation = useMutation({
     mutationFn: registerUser,
-    onSuccess: (data) => {
-      if (data.success) {
+
+    onSuccess: async (res) => {
+      if (res.success) {
         queryClient.invalidateQueries({ queryKey: ['users'] });
+        toast.success('Аккаунт успешно создан! ✅');
+      } else {
+        toast.error(res.message || 'Ошибка при создании пользователя ❌');
       }
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : 'Не удалось создать аккаунт ❌');
     },
   });
 

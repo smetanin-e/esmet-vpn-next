@@ -22,6 +22,13 @@ export const peerApi = {
     return wgInstance.delete(`/api/clients/${peerId}`);
   },
 
+  async deleteMany(peerIds: number[]) {
+    for (const peer of peerIds) {
+      wgInstance.delete(`/api/clients/${peer}`);
+    }
+    return;
+  },
+
   async getConfig(peerId: number) {
     return wgInstance.get(`/api/peer/${peerId}/config`, {
       responseType: 'blob', // важно, чтобы axios воспринимал ответ как файл

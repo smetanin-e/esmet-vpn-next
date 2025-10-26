@@ -1,5 +1,5 @@
-import { UserSubscription } from '@/entities/subscription/model/types';
 import { TransactionDTO } from '@/entities/transaction/model/types';
+import { UserSubscriptionDTO } from '@/entities/user-subscription/model/type';
 import { PeerDTO } from '@/entities/wg-peer/model/types';
 
 export type UserDTO = {
@@ -10,9 +10,8 @@ export type UserDTO = {
   lastName: string;
   balance: number;
   status: boolean;
-  subsEnd: Date | null;
   telegram: string;
-  subscription: UserSubscription | null;
+  userSubscription: UserSubscriptionDTO | null;
   transactions: TransactionDTO[] | null;
   peers: PeerDTO[] | null;
 };

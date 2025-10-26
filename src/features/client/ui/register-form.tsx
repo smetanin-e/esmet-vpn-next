@@ -33,11 +33,8 @@ export const RegisterForm: React.FC<Props> = ({ onClose }) => {
 
   const onSubmit = async (data: RegisterUserType) => {
     try {
-      const res = await register.mutateAsync(data);
-      if (!res.success) {
-        throw new Error(res.message);
-      }
-      toast.success('Аккаунт успешно создан! ✅');
+      await register.mutateAsync(data);
+
       onClose?.();
       form.reset();
     } catch (error) {

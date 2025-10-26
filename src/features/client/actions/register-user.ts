@@ -3,8 +3,8 @@ import { UserRole } from '@prisma/client';
 
 import { RegisterUserType } from '../model/schemas/register-schema';
 import { userRepository } from '@/entities/user/repository/user-repository';
-import { subscriptionPlanRepository } from '@/entities/subscription-plan/repository/subscription-plan-repository';
 import { getUserSession } from '@/features/user/actions/get-user-session';
+import { userSubscriptionRepository } from '@/entities/user-subscription/repository/user-subscription-repository';
 
 export const registerUser = async (formData: RegisterUserType) => {
   try {
@@ -18,13 +18,14 @@ export const registerUser = async (formData: RegisterUserType) => {
       return { success: false, message: 'Пользователь с таким логином уже существует' };
     }
 
-    const subscriptionPlan = await subscriptionPlanRepository.getPlans();
+    const user = await userRepository.registerUser(formData);
 
-    if (!subscriptionPlan) {
-      return { success: false, message: 'Подписка не найдена' };
+    if (formData.subscription) {
+      await userSubscriptionRepository.createUserSubscription(
+        user.id,
+        Number(formData.subscription),
+      );
     }
-
-    await userRepository.registerUser(formData);
 
     return { success: true };
   } catch (error) {
