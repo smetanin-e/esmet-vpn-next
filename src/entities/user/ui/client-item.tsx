@@ -6,6 +6,7 @@ import { UserDTO } from '../model/types';
 import Link from 'next/link';
 import { ChangeUserStatus } from '@/features/client/ui/change-user-status';
 import { useGetPeers } from '@/entities/wg-peer/model/hooks/use-get-peers';
+import { DeleteUser } from '@/features/client/ui/delete-user';
 
 interface Props {
   className?: string;
@@ -42,18 +43,7 @@ export const ClientItem: React.FC<Props> = ({ user }) => {
             <ChangeUserStatus userId={user.id} status={user.status} />
 
             <div className='flex items-center gap-4'>
-              <AlertDialog
-                description='!!!'
-                trigger={
-                  <Button
-                    size={'icon'}
-                    variant='outline'
-                    className='text-red-400 hover:text-red-300'
-                  >
-                    <Trash2 className='w-4 h-4' />
-                  </Button>
-                }
-              />
+              <DeleteUser userId={user.id} userName={`${user.lastName} ${user.firstName}`} />
             </div>
           </div>
         </div>

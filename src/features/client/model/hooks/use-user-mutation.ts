@@ -3,6 +3,7 @@ import { queryClient } from '@/shared/lib';
 import { registerUser } from '../../actions/register-user';
 import { toggleUserStatusAction } from '../../actions/toggle-status-user';
 import toast from 'react-hot-toast';
+import { deleteUserAction } from '../../actions/delete-user';
 
 export const useUserMutations = () => {
   const registerMutation = useMutation({
@@ -25,8 +26,10 @@ export const useUserMutations = () => {
     mutationFn: toggleUserStatusAction,
     onSuccess: async (res) => {
       if (res.success) {
-        await queryClient.invalidateQueries({ queryKey: ['peers'] });
-        await queryClient.invalidateQueries({ queryKey: ['users'] });
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['peers'] }),
+          queryClient.invalidateQueries({ queryKey: ['users'] }),
+        ]);
         toast.success('Статус пользователя изменен');
       } else {
         toast.error(res.message || 'Ошибка при изменении статуса');
@@ -39,11 +42,33 @@ export const useUserMutations = () => {
     },
   });
 
+  const deleteUser = useMutation({
+    mutationFn: deleteUserAction,
+    onSuccess: async (res) => {
+      if (res.success) {
+        await Promise.all([
+          queryClient.invalidateQueries({ queryKey: ['peers'] }),
+          queryClient.invalidateQueries({ queryKey: ['users'] }),
+        ]);
+        toast.success('Пользователь удален');
+      } else {
+        toast.error(res.message || 'Ошибка при удалении пользователя');
+      }
+    },
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : 'Не удалось удалить пользователя ❌');
+    },
+  });
+
   return {
     register: registerMutation,
     toggleUserStatus: {
       mutateAsync: toggleUserStatus.mutateAsync,
       isLoading: toggleUserStatus.isPending,
+    },
+    deleteUser: {
+      mutateAsync: deleteUser.mutateAsync,
+      isLoading: deleteUser.isPending,
     },
   };
 };

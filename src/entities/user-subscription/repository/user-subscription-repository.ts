@@ -20,4 +20,12 @@ export const userSubscriptionRepository = {
       data,
     });
   },
+
+  async findByUserId(userId: number) {
+    return prisma.userSubscription.findFirst({ where: { userId } });
+  },
+
+  async deleteByUserId(userId: number) {
+    return prisma.userSubscription.delete({ where: { userId } });
+  },
 };

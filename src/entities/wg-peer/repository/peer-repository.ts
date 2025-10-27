@@ -192,6 +192,16 @@ export const peerRepository = {
     }
   },
 
+  //Удаляем все пиры пользователя
+  async deletePeersByUserId(userId: number) {
+    const peerIds = await this.getPeerIdsByUserId(userId);
+    await peerApi.deleteMany(peerIds);
+
+    return prisma.wireguardPeer.deleteMany({
+      where: { userId },
+    });
+  },
+
   //добавляем пир из wg-rest-api в базу данных
   async createPeerDb(
     userId: number,
