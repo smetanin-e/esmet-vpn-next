@@ -48,6 +48,17 @@ export const FormSubscriptionPlan: React.FC<Props> = ({ setOpen }) => {
           />
         </div>
 
+        <div className='space-y-2'>
+          <FormInput
+            label='Метка'
+            name='label'
+            id='label'
+            type='text'
+            placeholder='Например standart'
+            required
+          />
+        </div>
+
         <div className='space-y-2 relative'>
           <FormInput
             label='Тариф'

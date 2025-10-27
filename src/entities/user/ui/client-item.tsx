@@ -1,6 +1,6 @@
 import React from 'react';
-import { Send, Trash2 } from 'lucide-react';
-import { AlertDialog, PeersQuantity } from '@/shared/components';
+import { Send } from 'lucide-react';
+import { PeersQuantity } from '@/shared/components';
 import { Button } from '@/shared/components/ui';
 import { UserDTO } from '../model/types';
 import Link from 'next/link';

@@ -60,7 +60,7 @@ export const ClientSubscriptionCard: React.FC<Props> = ({ className, subscriptio
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {subscription.subscriptionPlan.name === 'Бесплатная' ? (
+        {subscription.subscriptionPlan.label === 'FREE' ? (
           <></>
         ) : (
           <>

@@ -9,7 +9,7 @@ export const useSubscriptionPlanMutation = () => {
     onSuccess: async (res) => {
       if (res.success) {
         await queryClient.invalidateQueries({ queryKey: ['subscription-plans'] });
-        toast.success('Статус изменен');
+        toast.success('Тариф добавлен');
       } else {
         toast.error(res.message || 'Ошибка при создании тарифного плана');
       }

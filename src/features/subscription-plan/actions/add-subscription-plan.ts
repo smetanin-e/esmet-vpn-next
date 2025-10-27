@@ -11,10 +11,10 @@ export const addSubscriptionPlan = async (formData: SubscriptionPlanFormType) =>
     if (!admin || !admin.status || admin.role !== UserRole.ADMIN) {
       return { success: false, message: 'У вас нет прав на создание подписок' };
     }
-
-    const findSubscription = await subscriptionPlanRepository.findByName(formData.name);
+    const label = formData.label.toUpperCase();
+    const findSubscription = await subscriptionPlanRepository.find(formData.name, label);
     if (findSubscription) {
-      return { success: false, message: 'Подписка с таким названием уже существует' };
+      return { success: false, message: 'Подписка с таким названием или меткой уже существует' };
     }
     await subscriptionPlanRepository.createSubscriptionPlan(formData);
 
