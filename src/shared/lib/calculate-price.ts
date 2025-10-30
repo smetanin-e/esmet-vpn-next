@@ -2,8 +2,6 @@ export function calculatePrice(totalAmount: number, unitsCount: number) {
   if (unitsCount <= 0) return [];
   if (unitsCount === 1) return [totalAmount];
 
-  // Создаем коэффициенты для линейного убывания
-  // Первый элемент = 1, последний = 0.4 (убывание до 40% от максимальной цены)
   const ratios = [];
   for (let i = 0; i < unitsCount; i++) {
     const ratio = 1 - (i / (unitsCount - 1)) * 0.6; // Линейно убывает от 1 до 0.4

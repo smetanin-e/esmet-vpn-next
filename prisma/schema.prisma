@@ -50,7 +50,9 @@ model WireguardPeer {
     status     WgPeerStatus @default(ACTIVE)
     isEnabled  Boolean      @default(true) //для того чтобы при пополнении баланса включать только те конфиги, 
     //которые были включены до их деактивации по причине отрицательного баланса
-    createdAt  DateTime     @default(now())
+
+    lastActivity DateTime?
+    createdAt    DateTime  @default(now())
 }
 
 model Transaction {
