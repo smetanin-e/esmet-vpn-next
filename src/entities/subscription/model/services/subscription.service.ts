@@ -74,6 +74,8 @@ export class SubscriptionService {
       where: { userId, status: 'ACTIVE' },
     });
 
+    const maxPeers = subscriptionPlan.maxPeers;
+
     const context: SubscriptionChargeContext = {
       userId,
       userSubscription,
@@ -81,6 +83,7 @@ export class SubscriptionService {
       currentDate: new Date(),
       peersLast24hCount,
       activePeersCount,
+      maxPeers,
     };
 
     const strategy = this.selectStrategy(subscriptionPlan);

@@ -17,6 +17,7 @@ export interface SubscriptionChargeContext {
   // Подсчитанные заранее данные
   peersLast24hCount: number; // пиры, активные последние 24 часа
   activePeersCount: number; // пиры со статусом ACTIVE
+  maxPeers: number;
 }
 
 /**
