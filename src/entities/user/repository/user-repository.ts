@@ -100,4 +100,15 @@ export const userRepository = {
       where: { id: userId },
     });
   },
+
+  async increaseBalance(userId: number, amount: number) {
+    return prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        balance: { increment: amount },
+      },
+    });
+  },
 };

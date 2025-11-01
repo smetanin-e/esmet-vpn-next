@@ -14,6 +14,7 @@ import { cn } from '@/shared/lib/utils';
 import { calculatePrice } from '@/shared/lib/calculate-price';
 import { CardLabel } from '@/shared/components';
 import { UserSubscriptionDTO } from '@/entities/user-subscription/model/type';
+import { PaymentModal } from '@/entities/transaction/ui';
 
 interface Props {
   className?: string;
@@ -80,9 +81,7 @@ export const ClientSubscriptionCard: React.FC<Props> = ({ className, subscriptio
                   balance ? balance : 0
                 }`}</span>
               </p>
-              <Button variant={'outline'} size={'sm'}>
-                Пополнить
-              </Button>
+              <PaymentModal />
             </div>
           </>
         )}
