@@ -1,4 +1,3 @@
-import { youkassaInstance } from '@/shared/service/youkassa-instance';
 import { PaymentData } from '@/shared/types/youkassa.type';
 import axios from 'axios';
 
